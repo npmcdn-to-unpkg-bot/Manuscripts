@@ -78,8 +78,12 @@
 				}
 				$frIDs = rtrim($frIDs, ",");
 			} else {
-				$rIDs[] = $rKeywords;
-				$frIDs = $rKeywords;
+				$queryD = "SELECT * FROM keywords WHERE keyword LIKE \"$rKeywords\"";
+				$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
+				while($rowD = mysqli_fetch_row($mysqli_resultD)) {
+					$rIDs[] = $rowD[0];
+					$frIDs .= $rowD[0];
+				}
 			}
 			$queryD = "SELECT * FROM manuscript_books WHERE super_book_code LIKE \"$ID\"";
 			$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
@@ -151,10 +155,25 @@
 		}
 	}
 			
-/////////////////////////////////////////////////////////// Div for keywords currently on file			
+/////////////////////////////////////////////////////////// Div for alert		
 	
 	if(!empty($ID)) {
-		if(($found == "y")) {			
+		if(($found == "y")) {
+			if(($action == "save") && ($save == "y")) {
+				echo "<div id=\"alertKeywords\" class=\"alert alert-primary alert-dismissible\">";
+				echo "<button class=\"close\" data-dismiss=\"alert\"><i class=\"pci-cross pci-circle\"></i></button>";
+				echo "<strong>Keyword assignments saved.</strong>";
+				echo "</div>";
+			}
+			if(($action == "save") && ($save != "y")) {
+				echo "<div id=\"alertKeywords\" class=\"alert alert-pink alert-dismissible\">";
+				echo "<button class=\"close\" data-dismiss=\"alert\"><i class=\"pci-cross pci-circle\"></i></button>";
+				echo "<strong>There was a problem: please note.</strong>";
+				echo "</div>";
+			}
+	
+/////////////////////////////////////////////////////////// Div for keywords currently on file		
+					
 			echo "<div class=\"panel panel-bordered-dark bg-gray\">";
     		echo "<div class=\"panel-body\">";
     		echo "<div id=\"tagsManagerDisplay\">";
@@ -194,27 +213,50 @@
 /////////////////////////////////////////////////////////// Div for recent categorisation tags
 
 			echo "<div id=\"tagsManagerRecent\" class=\"pad-top mar-top\">";
-			echo "<h4>RECENT</h4>";
+			echo "<h4>RECENT TAGS</h4>";
 			echo "<hr />";
 			echo "</div>";
 
 //////////////////////////// Gather prior tags (just an example presently!)
 			
-			$priorTags = array();
-			$queryD = "SELECT * FROM keywords ORDER BY RAND() LIMIT 10";
+			$o = 1;
+			$priorTags = "";
+			$priorTagsA = array();
+			$priorTagsB = array();
+			$queryD = "SELECT DISTINCT(new_keywords) FROM manuscript_cat_audit LIMIT 2";
 			$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
 			while($rowD = mysqli_fetch_row($mysqli_resultD)) {
-				$priorTags[] = ucwords($rowD[1]);
+				if(($o == 1)) {
+					if((preg_match("/\|/i","$rowD[0]"))) {
+						$priorTagsA = explode("|","$rowD[0]");
+					} else {
+						$priorTagsA[] = $rowD[0];
+					}
+				}
+				if(($o == 2)) {
+					if((preg_match("/\|/i","$rowD[0]"))) {
+						$priorTagsB = explode("|","$rowD[0]");
+					} else {
+						$priorTagsB[] = $rowD[0];
+					}
+				}
+				$o++;
 			}
+			$priorTags = array_merge($priorTagsA,$priorTagsB);
+			$priorTags = array_unique($priorTags);
 
 //////////////////////////// Sort and show prior tags
 						
-    		echo "<div id=\"tagsManagerSaved\">";
+    		echo "<div class=\"panel panel-bordered-info bg-gray\">";
+    		echo "<div class=\"panel-body\">";
+			echo "<div id=\"tagsManagerSaved\">";
 			sort($priorTags);
 			foreach($priorTags as $p) {
 				echo "<li><a href=\"javascript: var doThis = tagApi.tagsManager('pushTag','$p');\" style=\"color:#000055;\">$p</a></li>";
 			}
     		echo "</div>";
+			echo "</div>";
+			echo "</div>";
 			
 /////////////////////////////////////////////////////////// Debug
 //
@@ -288,7 +330,11 @@
 
 				if(($action == "save") && ($save == "y")) {
 					echo "var doButton = $('#btn_".$ID."').html('Yes');\n\n";
-					echo "var doClass = $('#btn_".$ID."').removeClass('btn-pink').addClass('btn-success');";
+					echo "var doClass = $('#btn_".$ID."').removeClass('btn-pink').addClass('btn-success');\n\n";
+				}
+				
+				if(($action == "save")) {
+					echo "var doAlert = $('#alertKeywords').delay(3000).fadeOut();\n\n";	
 				}
 
 ?>								
