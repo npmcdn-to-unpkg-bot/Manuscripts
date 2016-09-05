@@ -160,7 +160,7 @@
 	if(!empty($ID)) {
 		if(($found == "y")) {
 			if(($action == "save") && ($save == "y")) {
-				echo "<div id=\"alertKeywords\" class=\"alert alert-primary alert-dismissible\">";
+				echo "<div id=\"alertKeywords\" class=\"alert alert-success alert-dismissible\">";
 				echo "<button class=\"close\" data-dismiss=\"alert\"><i class=\"pci-cross pci-circle\"></i></button>";
 				echo "<strong>Keyword assignments saved.</strong>";
 				echo "</div>";
@@ -187,7 +187,7 @@
 			echo "<input type=\"hidden\" name=\"titleTaggerList\" id=\"titleTaggerList\" >";
     		echo "<input type=\"text\" ";
     		echo "name=\"titleTagger\" ";
-    		echo "autocomplete=\"on\" ";
+    		echo "autocomplete=\"off\" ";
     		echo "id=\"titleTagger\" ";
     		echo "placeholder=\"Start typing a tag or click to clear ...\" ";
     		echo "class=\"title-tagger input-sm text-dark tm-input\" ";
@@ -217,7 +217,7 @@
 			echo "<hr />";
 			echo "</div>";
 
-//////////////////////////// Gather prior tags (just an example presently!)
+//////////////////////////// Gather prior tags
 			
 			$o = 1;
 			$priorTags = "";
@@ -252,7 +252,26 @@
 			echo "<div id=\"tagsManagerSaved\">";
 			sort($priorTags);
 			foreach($priorTags as $p) {
-				echo "<li><a href=\"javascript: var doThis = tagApi.tagsManager('pushTag','$p');\" style=\"color:#000055;\">$p</a></li>";
+				$descp = "";
+				echo "<li>";
+				echo "<a href=\"javascript: var doThis = tagApi.tagsManager('pushTag','$p');\" ";
+				echo "style=\"color:#000055;\" ";
+				echo "class=\"add-tooltip\" ";
+				echo "data-toggle=\"tooltip\" ";
+				echo "data-container=\"body\" ";
+				echo "data-placement=\"left\" ";
+				echo "data-original-title=\"";
+				$queryD = "SELECT * FROM keywords WHERE keyword LIKE \"$p\"";
+				$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
+				while($rowD = mysqli_fetch_row($mysqli_resultD)) {
+					echo "<strong>".strtoupper($p)."</strong><br /><br />$rowD[2]";
+					$descp = "y";
+				}
+				if(($descp != "y")) {
+					echo "NO DESCRIPTION AVAILABLE";	
+				}
+				echo "\" ";
+				echo ">$p</a></li>";
 			}
     		echo "</div>";
 			echo "</div>";
@@ -275,6 +294,12 @@
 ?>
 			<script language="javascript" type="text/javascript" src="./js/typeahead.bundle.js"></script>
 			<script language="javascript" type="text/javascript" >
+			
+				$('[data-toggle="tooltip"]').tooltip({
+					template: '<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner" style="border: 3px solid #ffffff; color: #000000; background-color:#6ab5f1; padding:20px;"></div></div>',
+					html: true,
+					trigger : 'hover'
+				});
 
 				var preKeywords = new Bloodhound({
       				datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
@@ -334,7 +359,7 @@
 				}
 				
 				if(($action == "save")) {
-					echo "var doAlert = $('#alertKeywords').delay(3000).fadeOut();\n\n";	
+					echo "var doAlert = $('#alertKeywords').delay(5000).fadeOut();\n\n";	
 				}
 
 ?>								

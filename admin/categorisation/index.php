@@ -244,7 +244,7 @@
 		</style>
     </head>   
 	<body>
-		<div id="container" class="effect mainnav-sm">
+		<div id="container" class="effect mainnav-sm aside-dark">
 <?php
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// Header
@@ -477,33 +477,52 @@
                         <div class="nano">
                             <div class="nano-content">
                                 <ul class="nav nav-tabs nav-justified">
-                                    <li class="active"><a href="#demo-asd-tab-1" data-toggle="tab"><i class="info-alt"></i></a></li>
-                                    <!--
-                                    <li><a href="#demo-asd-tab-2" data-toggle="tab"><i class="ti-comments"></i></a></li>
-                                    <li><a href="#demo-asd-tab-3" data-toggle="tab"><i class="ti-settings"></i></a></li>
-                                    //-->
+                                    <li class="active"><a href="#asd-tab-1" data-toggle="tab"><i class="ti-info-alt"></i></a></li>
+                                    <li><a href="#asd-tab-2" data-toggle="tab"><i class="ti-settings"></i></a></li>
                                 </ul>
                                 <div class="tab-content">
-                                    <div class="tab-pane fade in active" id="demo-asd-tab-1">
-                                        <p class="pad-all text-lg">KEYWORD TREE</p>
+                                    <div class="tab-pane fade in active" id="asd-tab-1">
+                                        <p class="pad-all text-lg">TAGS LIST</p>
                                         <div class="pad-hor" style="text-align: left;">
-Curabitur fringilla libero id leo interdum, at aliquam nisi fermentum. Ut ut felis ultricies, accumsan ex quis, malesuada massa. Ut viverra tempor arcu ut feugiat. Nulla commodo erat non ultricies pulvinar. Ut feugiat vestibulum fringilla. Mauris ullamcorper diam ut nisi scelerisque ultrices et vehicula lorem. Vivamus elementum eu nisi at blandit. Nam in quam malesuada nunc interdum mattis vel eu diam. Donec justo sapien, aliquam vel purus nec, viverra porta odio. Sed sollicitudin massa magna, sed pharetra orci porttitor sit amet. Ut venenatis feugiat pellentesque.
+                                            <div class="input-group-btn">
+					                            <button data-toggle="dropdown" class="btn btn-block btn-dark dropdown-toggle" type="button">
+					                                Select Letter <i class="dropdown-caret"></i>
+					                            </button>
+					                            <ul class="dropdown-menu" style="width: 99%;">
+												<?php
+													foreach($alphabet as $al) {
+														echo "<li><a href=\"javascript: ";
+														echo "var dataE = 'letter=".ucwords($al)."&action=find'; ";
+														echo "var doDivA = $('#keywordsList').fadeOut('fast', function(){ ";
+														echo "var searchValA = $('#keywordsList').load('./data_keywords_desc.php',dataE, function(){ ";
+														echo "var doDivAlsoA = $('#keywordsList').fadeIn('slow'); ";
+														echo "}); ";
+														echo "}); ";
+														echo "\" style=\"color: #000000;\">".ucwords($al)."</a></li>";	
+													}
+												?>
+					                            </ul>
+					                        </div>
+                                            <?php
+											//	echo "<div class=\"panel panel-bordered panel-primary mar-top\" ";
+											//	echo "style=\"border: 0px solid 1690F3; background-color: #063D6B;\">";
+    										//	echo "<div class=\"panel-body\">";
+												echo "<div id=\"keywordsList\" class=\"text-light text-right mar-top mar-btm\" style=\"padding-bottom: 25px;\">";
+												echo "To view a list of keywords from the database, please select a letter of the alphabet ";
+												echo "from the above drop-down menu which will query the database using your ";
+												echo "selection as the first character of a keyword.";
+												echo "</div>";
+											//	echo "</div>";
+											//	echo "</div>";
+											?>
                                         </div>
                                     </div>
-                                    <!--
-                                    <div class="tab-pane fade" id="demo-asd-tab-2">
-                                        <p class="pad-all text-lg">Second tab</p>
-                                        <div class="pad-hor" style="text-align: left;">
-Proin bibendum blandit urna at faucibus. Nam fringilla cursus nisl ac porta. Maecenas dictum dui turpis, et posuere arcu aliquam sit amet. Duis augue dolor, vulputate in accumsan nec, mollis ac nunc. Donec ultricies ut sapien euismod dictum. Praesent mauris purus, cursus quis fringilla et, faucibus non justo. Vestibulum arcu magna, fermentum a posuere et, gravida sit amet neque. Suspendisse potenti. Sed dignissim eu urna nec laoreet. Phasellus suscipit vel turpis sed efficitur. Curabitur eget aliquet justo. Aenean semper lorem id elementum ultricies. Nunc finibus et nibh a tempus. Cras in magna imperdiet, suscipit arcu vitae, posuere dui. Integer mollis, felis et accumsan varius, neque arcu varius neque, sit amet vestibulum elit metus nec justo. Morbi hendrerit erat a lobortis iaculis.
-                                        </div>
-                                    </div>
-                                    <div class="tab-pane fade" id="demo-asd-tab-3">
-                                        <p class="pad-all text-lg">Third tab</p>
+                                    <div class="tab-pane fade" id="asd-tab-2">
+                                        <p class="pad-all text-lg">HISTORY</p>
                                         <div class="pad-hor" style="text-align: left;">
 Curabitur id dui a nisi aliquet ullamcorper nec eu sapien. Fusce lacinia pulvinar condimentum. Nulla facilisi. Sed iaculis erat lacus, sit amet tempor erat pharetra ultricies. Pellentesque fermentum blandit lacus, at volutpat purus volutpat et. Integer mattis magna at porta imperdiet. Integer eget nibh vulputate, vehicula nibh in, iaculis dui. Maecenas arcu justo, pharetra vitae pulvinar at, convallis sed mauris. Fusce eu imperdiet felis. Nunc euismod erat eget tortor viverra, quis dapibus diam ornare. Ut consectetur sed lectus at aliquam. Nulla facilisi. Morbi aliquam, lectus nec tristique malesuada, sapien metus ullamcorper nibh, in molestie turpis dolor rutrum dui.
                                         </div>
                                     </div>
-                                    //-->
                                 </div>
                             </div>
                         </div>
