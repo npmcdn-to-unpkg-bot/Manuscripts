@@ -70,13 +70,23 @@
 	$audit = array();
 	$timeKeys = array();
 	$actualKeys = array();
-	$queryD = "SELECT DISTINCT(super_book_code), change_time, new_keywords, new_keywordIDs, MAX(ID) AS maxID ";
-	$queryD .= "FROM manuscript_cat_audit GROUP BY super_book_code ORDER BY maxID DESC LIMIT 10";
+	$getIDs = array();
+	$queryD = "SELECT DISTINCT(super_book_code), change_time, new_keywords, new_keywordIDs, MAX(ID) ID ";
+	$queryD .= "FROM manuscript_cat_audit GROUP BY super_book_code ORDER BY ID DESC LIMIT 10";
 	$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
 	while($rowD = mysqli_fetch_row($mysqli_resultD)) {
-		$audit[] = $rowD[0];	
-		$timeKeys[] = $rowD[1];
-		$actualKeys[] = $rowD[2];
+		$getIDs [] = $rowD[0];
+	}
+	foreach($getIDs as $gid) {
+		$queryD = "SELECT super_book_code, change_time, new_keywords, new_keywordIDs ";
+		$queryD .= "FROM manuscript_cat_audit WHERE super_book_code LIKE \"$gid\" ORDER BY ID DESC LIMIT 1";
+		$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
+		while($rowD = mysqli_fetch_row($mysqli_resultD)) {
+			$audit[] = $rowD[0];	
+			$ab = $rowD[0];
+			$timeKeys[] = $rowD[1];
+			$actualKeys[$ab] = $rowD[2];
+		}
 	}
 	$b = 0;
 	if(($audit[0] != "")) {
@@ -92,9 +102,10 @@
     			echo "<div class=\"panel-body\">";
 				echo "<div id=\"keywordsList\" class=\"text-light text-left mar-top\">";
 				echo "<strong>$rowD[1]</strong><br />";
-				echo $timeKeys[$b];
-				echo "<br /><br />";
-				$aks = explode("|","$actualKeys[$b]");
+			//	echo $timeKeys[$b];
+			//	echo "<br />";
+				echo "<br />";
+				$aks = explode("|","$actualKeys[$t]");
 				if(($aks[0] != "")) {	
 					foreach($aks as $j) {
 						echo "<li>";

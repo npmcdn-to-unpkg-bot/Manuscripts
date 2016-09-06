@@ -583,12 +583,14 @@
 												echo "</div>";
 											?>
                                         </div>
+                                        <p>&nbsp;</p>
+                                        <p>&nbsp;</p>
                                     </div>
                                     <div class="tab-pane fade" id="asd-tab-2">
                                         <p class="pad-all text-lg">HISTORY &nbsp; <?php
                                         	echo "<a href=\"javascript: ";
 											echo "var doAuditA = $('#auditHistoryPanel').fadeOut('fast', function(){ ";
-											echo "var doAuditB = $('#auditHistoryPanel').load('./data_history.php','', function(){ ";
+											echo "var doAuditB = $('#auditHistoryPanel').load('./data_history.php','$ref=".time()."', function(){ ";
 											echo "var doAuditC = $('#auditHistoryPanel').fadeIn('slow'); ";
 											echo "}); ";
 											echo "}); ";
@@ -600,6 +602,8 @@
 												include("./data_history.php");
 											?>
                                         </div>
+                                        <p>&nbsp;</p>
+                                        <p>&nbsp;</p>
                                     </div>
                                 </div>
                             </div>
