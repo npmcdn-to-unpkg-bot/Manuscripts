@@ -50,13 +50,28 @@
 		$_POST = array();
 	}
 	
+/////////////////////////////////////////////////////////// Load progress
+
+	$queryD = "SELECT COUNT(*) FROM manuscript_books ";
+	$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
+	while($rowD = mysqli_fetch_row($mysqli_resultD)) {
+		$fullTotal = $rowD[0];
+	}
+	$queryD = "SELECT COUNT(*) FROM manuscript_books WHERE keywords != \"\" ";
+	$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
+	while($rowD = mysqli_fetch_row($mysqli_resultD)) {
+		$keywordTotal = $rowD[0];
+	}
+	$progress = round(($keywordTotal / $fullTotal) * 100);
+	echo "<div class=\"progress progress-lg\"><div style=\"width: ".$progress."%;\" class=\"progress-bar progress-bar-success\">".$progress."%</div></div>";
+	
 /////////////////////////////////////////////////////////// Load audit
 
 	$audit = array();
 	$timeKeys = array();
 	$actualKeys = array();
-	$queryD = "SELECT DISTINCT(super_book_code), change_time, new_keywords, MAX(ID) AS maxID ";
-	$queryD .= "FROM manuscript_cat_audit GROUP BY super_book_code ORDER BY maxID DESC LIMIT 6";
+	$queryD = "SELECT DISTINCT(super_book_code), change_time, new_keywords, new_keywordIDs, MAX(ID) AS maxID ";
+	$queryD .= "FROM manuscript_cat_audit GROUP BY super_book_code ORDER BY maxID DESC LIMIT 10";
 	$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
 	while($rowD = mysqli_fetch_row($mysqli_resultD)) {
 		$audit[] = $rowD[0];	
@@ -69,16 +84,32 @@
 			$queryD = "SELECT * FROM manuscript_books WHERE super_book_code LIKE \"$t\" ";
 			$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
 			while($rowD = mysqli_fetch_row($mysqli_resultD)) {
-				$actualKeys[$b] = preg_replace("/\|/i",", ", "$actualKeys[$b]");
-				$actualKeys[$b] = trim($actualKeys[$b]);
-				$actualKeys[$b] = rtrim($actualKeys[$b], ",");
+			//	$actualKeys[$b] = preg_replace("/\|/i",", ", "$actualKeys[$b]");
+			//	$actualKeys[$b] = trim($actualKeys[$b]);
+			//	$actualKeys[$b] = rtrim($actualKeys[$b], ",");
 				echo "<div class=\"panel panel-bordered panel-primary mar-top\" ";
 				echo "style=\"border: 0px solid 1690F3; background-color: #063D6B;\">";
     			echo "<div class=\"panel-body\">";
 				echo "<div id=\"keywordsList\" class=\"text-light text-left mar-top\">";
 				echo "<strong>$rowD[1]</strong><br />";
 				echo $timeKeys[$b];
-				echo "<br /><li><a href=\"javascript: ";
+				echo "<br /><br />";
+				$aks = explode("|","$actualKeys[$b]");
+				if(($aks[0] != "")) {	
+					foreach($aks as $j) {
+						echo "<li>";
+						echo "<a href=\"javascript: var doThisZ = tagApi.tagsManager('pushTag','$j');\" ";
+						echo "class=\"add-tooltip\" ";
+						echo "data-toggle=\"tooltipZ\" ";
+						echo "data-container=\"body\" ";
+						echo "data-placement=\"left\" ";
+						echo "data-original-title=\"Click to assign <strong>".strtoupper($j)."</strong> as a keyword in the left-hand panel.\" ";
+						echo ">";
+						echo "$j";
+						echo "</a></li>";
+					}
+				}
+				echo "<br /><a href=\"javascript: ";
 				echo "var dataE = 'ID=$t&action=yes'; ";
 				echo "var doDiv = $('#titleDetail').fadeOut('fast', function(){ ";
 				echo "var searchVal = $('#titleDetail').load('./data_titles.php',dataE, function(){ ";
@@ -90,7 +121,9 @@
 				echo "var doDivAlsoA = $('#titleTags').fadeIn('slow'); ";
 				echo "}); ";
 				echo "}); ";
-				echo "\" style=\"color:#ffffcc;\"><strong>REVIEW RECORD</strong></a></li>";
+				echo "\" ";
+				echo "style=\"color:#ffffcc;\" ";
+				echo "><strong>REVIEW RECORD</strong></a>";
 				echo "</div>";
 				echo "</div>";
 				echo "</div>";
@@ -104,3 +137,12 @@
 	include("../era.dbdisconnect.php");
 
 ?>
+			<script language="javascript" type="text/javascript" >
+			
+				$('[data-toggle="tooltipZ"]').tooltip({
+					template: '<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner" style="border: 3px solid #ffffff; color: #000000; background-color:#6ab5f1; padding:20px;"></div></div>',
+					html: true,
+					trigger : 'hover'
+				});
+				
+			</script>

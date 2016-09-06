@@ -54,8 +54,10 @@
 /////////////////////////////////////////////////////////// Destroy get and post arrays after use	
 	
 	$alphabet = array("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x","y","z");
+	$alphabetNumerical = array("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","s","t","u","v","w","x",
+		"y","z","0","1","2","3","4","5","6","7","8","9", "*");
 	$searchLetter = mysql_real_escape_string($_GET["searchLetter"]);
-	if(($searchLetter == "") or (!in_array($searchLetter, $alphabet))) { $searchLetter = "a"; }
+	if(($searchLetter == "") or (!in_array($searchLetter, $alphabetNumerical))) { $searchLetter = "a"; }
 	$_GET = array();
 	$_POST = array();	
 
@@ -259,8 +261,13 @@
                         </a>
                 	</div>
                     <div class="navbar-content clearfix">
+                    <!--
                     	<ul class="nav navbar-top-links pull-left">
                     		<li class="tgl-menu-btn"><a class="mainnav-toggle" href="#"><i class="ti-view-list icon-lg"></i></a></li>
+               			</ul>
+                    //-->
+                        <ul class="nav navbar-top-links pull-left">
+                    		<li style="font-size: 1.2em; padding: 0.5em;" class="text-bold">&nbsp; &nbsp;CATEGORISATION TOOLKIT</li>
                			</ul>
                         <ul class="nav navbar-top-links pull-right">
 							<li><a href="#" class="aside-toggle navbar-aside-icon"><i class="pci-ver-dots"></i></a></li>
@@ -276,20 +283,11 @@
             <div class="boxed">
 				<div id="content-container">
                 
-					<!-- Page Title and Search Box -->                
+					<!--                
 					<div id="page-title">
-                    	<h1 class="page-header text-overflow">Categorisation Toolkit</h1>
-                    	<!--
-                        <div class="searchbox">
-                        	<div class="input-group custom-search-form">
-                            	<input type="text" class="form-control" placeholder="Search..">
-                            	<span class="input-group-btn">
-                                	<button class="text-muted" type="button"><i class="ti-search"></i></button>
-                            	</span>
-                        	</div>
-                    	</div> 
-                        //-->  
+                    	<h1 class="page-header text-overflow">Categorisation Toolkit</h1> 
                 	</div>
+                    //-->
                     
               		<!-- Page Content Open -->
              		<div id="page-content">
@@ -320,7 +318,22 @@
                                                             echo "\"><strong>".strtoupper($alpha)."</strong></button>";	
 															echo "</a>";
                                                         }
-                                                        
+														
+/////////////////////////////////////////////////////////// Get Titles By First Number														
+														
+														echo "<a href=\"./?searchLetter=0\" target=\"_self\">";
+                                                        echo "<button class=\"btn btn-default btn-active-purple";
+                                                        if(($searchLetter == "0")) { echo " active"; }
+                                                        echo "\"><strong>0 - 9</strong></button>";	
+														echo "</a>";
+														
+/////////////////////////////////////////////////////////// Get Titles By First Other Character														
+														
+                                                        echo "<a href=\"./?searchLetter=*\" target=\"_self\">";
+                                                        echo "<button class=\"btn btn-default btn-active-purple";
+                                                        if(($searchLetter == "*")) { echo " active"; }
+                                                        echo "\"><strong>*</strong></button>";	
+														echo "</a>";
                                                     ?>
                                                 </div>
                                             </div>
@@ -337,8 +350,63 @@
                                         	<?php
                                                 
 												$queryD = "SELECT * FROM manuscript_books WHERE ";
-												$queryD .= "super_book_title LIKE \"$searchLetter%\" ";
-											//	$queryD .= "AND keywords = \"\" ";
+												if(($searchLetter != "0") && ($searchLetter != "*")) {
+													$queryD .= "super_book_title LIKE \"$searchLetter%\" ";
+												}
+												if(($searchLetter == "0")) {
+													$queryD .= "(";
+													$queryD .= "super_book_title LIKE \"0%\" OR ";
+													$queryD .= "super_book_title LIKE \"1%\" OR ";
+													$queryD .= "super_book_title LIKE \"2%\" OR ";
+													$queryD .= "super_book_title LIKE \"3%\" OR ";
+													$queryD .= "super_book_title LIKE \"4%\" OR ";
+													$queryD .= "super_book_title LIKE \"5%\" OR ";
+													$queryD .= "super_book_title LIKE \"6%\" OR ";
+													$queryD .= "super_book_title LIKE \"7%\" OR ";
+													$queryD .= "super_book_title LIKE \"8%\" OR ";
+													$queryD .= "super_book_title LIKE \"9%\"";
+													$queryD .= ") ";
+												}
+												if(($searchLetter == "*")) {
+													$queryD .= "(";
+													$queryD .= "super_book_title NOT LIKE \"0%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"1%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"2%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"3%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"4%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"5%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"6%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"7%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"8%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"9%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"A%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"B%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"C%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"D%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"E%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"F%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"G%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"H%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"I%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"J%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"K%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"L%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"M%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"N%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"O%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"P%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"Q%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"R%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"S%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"T%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"U%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"V%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"W%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"X%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"Y%\" AND ";
+													$queryD .= "super_book_title NOT LIKE \"Z%\"";
+													$queryD .= ") ";
+												}
 												$queryD .= "ORDER BY super_book_title ASC";
 												$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
 												while($rowD = mysqli_fetch_row($mysqli_resultD)) {
@@ -544,11 +612,13 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// Footer
 
 ?>         
+<!--
         	<footer id="footer">
 				<div class="hide-fixed pull-right pad-rgt">Last Updated: 6 September 2016</div>
 				<p class="pad-lft">Western Sydney University &#0169; <?php echo date("Y",time()); ?></p>
 			</footer>
             <button class="scroll-top btn"><i class="pci-chevron chevron-up"></i></button>
+//-->
         </div>
 <?php
 

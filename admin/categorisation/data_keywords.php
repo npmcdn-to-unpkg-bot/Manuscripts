@@ -226,6 +226,28 @@
 				}
 			}
 			
+/////////////////////////////////////////////////////////// Div for commonly associated tags if pinged
+
+			echo "<div id=\"tagAssociationsContainer\">";
+			echo "<div id=\"tagAssociations\" class=\"pad-top mar-top\">";
+			echo "<h4>RANKED ASSOCIATED TAGS</h4>";
+			echo "<hr />";
+			echo "</div>";
+			
+//////////////////////////// Gather associated tags			
+			
+			echo "<div class=\"panel panel-bordered-primary bg-gray\">";
+    		echo "<div class=\"panel-body\">";
+			echo "<div id=\"tagAssociationsList\">";
+			echo "No term selected from tag list.";
+			echo "</div>";
+			echo "</div>";
+			echo "</div>";
+			
+//////////////////////////// Close container div			
+			
+			echo "</div>";
+			
 /////////////////////////////////////////////////////////// Div for recent categorisation tags
 
 			echo "<div id=\"tagsManagerRecent\" class=\"pad-top mar-top\">";
@@ -239,7 +261,7 @@
 			$priorTags = "";
 			$priorTagsA = array();
 			$priorTagsB = array();
-			$queryD = "SELECT DISTINCT(new_keywords) FROM manuscript_cat_audit LIMIT 2";
+			$queryD = "SELECT DISTINCT(new_keywords) FROM manuscript_cat_audit ORDER BY ID DESC LIMIT 2";
 			$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
 			while($rowD = mysqli_fetch_row($mysqli_resultD)) {
 				if(($o == 1)) {
@@ -263,29 +285,41 @@
 
 //////////////////////////// Sort and show prior tags
 						
-    		echo "<div class=\"panel panel-bordered-info bg-gray\">";
+    		echo "<div class=\"panel panel-bordered-mint bg-gray\">";
     		echo "<div class=\"panel-body\">";
 			echo "<div id=\"tagsManagerSaved\">";
 			sort($priorTags);
 			foreach($priorTags as $p) {
 				$descp = "";
+				$dText = "";
+				$kID = "";
+				$queryD = "SELECT * FROM keywords WHERE keyword LIKE \"$p\"";
+				$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
+				while($rowD = mysqli_fetch_row($mysqli_resultD)) {
+					$dText = "<strong>".strtoupper($p)."</strong><br /><br />$rowD[2]";
+					$kID = $rowD[0];
+					$descp = "y";
+				}
+				if(($descp != "y")) {
+					$dText = "NO DESCRIPTION AVAILABLE";	
+				}
 				echo "<li>";
-				echo "<a href=\"javascript: var doThis = tagApi.tagsManager('pushTag','$p');\" ";
+				echo "<a href=\"javascript: ";
+				echo "var doThis = tagApi.tagsManager('pushTag','$p'); ";
+//				echo "var dataA = 'kID=$kID&action=yes'; ";
+//				echo "var doAssA = $('#tagAssociationsList').fadeOut('fast', function(){ ";
+//				echo "var doAssB = $('#tagAssociationsList').load('./data_keywords_assoc.php',dataA, function(){ ";
+//				echo "var doAssB = $('#tagAssociationsList').fadeIn('slow'); ";
+//				echo "}); ";
+//				echo "}); ";
+				echo "\" ";
 				echo "style=\"color:#000055;\" ";
 				echo "class=\"add-tooltip\" ";
 				echo "data-toggle=\"tooltip\" ";
 				echo "data-container=\"body\" ";
 				echo "data-placement=\"left\" ";
 				echo "data-original-title=\"";
-				$queryD = "SELECT * FROM keywords WHERE keyword LIKE \"$p\"";
-				$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
-				while($rowD = mysqli_fetch_row($mysqli_resultD)) {
-					echo "<strong>".strtoupper($p)."</strong><br /><br />$rowD[2]";
-					$descp = "y";
-				}
-				if(($descp != "y")) {
-					echo "NO DESCRIPTION AVAILABLE";	
-				}
+				echo $dText;
 				echo "\" ";
 				echo ">$p</a></li>";
 			}

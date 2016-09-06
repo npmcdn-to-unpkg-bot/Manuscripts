@@ -60,7 +60,15 @@
 	$queryD = "SELECT * FROM keywords WHERE keyword LIKE \"$letter%\" ORDER BY keyword ASC";
 	$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
 	while($rowD = mysqli_fetch_row($mysqli_resultD)) {	
-		echo "<a href=\"javascript: var doThis = tagApi.tagsManager('pushTag','".ucwords($rowD[1])."');\" ";
+		echo "<a href=\"javascript: ";
+		echo "var doThis = tagApi.tagsManager('pushTag','".ucwords($rowD[1])."'); ";
+		echo "var dataA = 'kID=".$rowD[0]."&action=yes'; ";
+		echo "var doAssA = $('#tagAssociationsList').fadeOut('fast', function(){ ";
+		echo "var doAssB = $('#tagAssociationsList').load('./data_keywords_assoc.php',dataA, function(){ ";
+		echo "var doAssB = $('#tagAssociationsList').fadeIn('slow'); ";
+		echo "}); ";
+		echo "}); ";
+		echo "\" ";
 		echo "style=\"color:#FFFFFF;\" ";
 		echo "class=\"add-tooltip\" ";
 		echo "data-toggle=\"tooltipB\" ";
