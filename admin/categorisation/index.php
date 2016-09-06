@@ -92,7 +92,7 @@
   	VERSION 0.1
     
   	Development Started: 15 August 2016
-	Last updated: 5 September 2016
+	Last updated: 6 September 2016
 
 
 
@@ -448,8 +448,7 @@
                                     <div id="mainnav-shortcut">
                                         <ul class="list-unstyled">
                                             <li class="col-xs-4" data-content="Tag Works"><a class="shortcut-grid" href="./index.php"><i class="ti-info-alt"></i></a></li>
-                                            <li class="col-xs-4" data-content="Edit Tags"><a class="shortcut-grid" href="#"><i class="ti-tag"></i></a></li>
-                                            <li class="col-xs-4" data-content="Audit Work"><a class="shortcut-grid aside-toggle" href="#"><i class="ti-pin-alt"></i></a></li>
+                                            <li class="col-xs-4" data-content="Edit Tags (Coming Soon)"><a class="shortcut-grid" href="#"><i class="ti-tag"></i></a></li>
                                         </ul>
                                     </div>
 									<!-- 
@@ -504,23 +503,34 @@
 					                            </ul>
 					                        </div>
                                             <?php
-											//	echo "<div class=\"panel panel-bordered panel-primary mar-top\" ";
-											//	echo "style=\"border: 0px solid 1690F3; background-color: #063D6B;\">";
-    										//	echo "<div class=\"panel-body\">";
-												echo "<div id=\"keywordsList\" class=\"text-light text-right mar-top mar-btm\" style=\"padding-bottom: 25px;\">";
+												echo "<div class=\"panel panel-bordered panel-primary mar-top\" ";
+												echo "style=\"border: 0px solid 1690F3; background-color: #063D6B;\">";
+    											echo "<div class=\"panel-body\">";
+												echo "<div id=\"keywordsList\" class=\"text-light text-left mar-top mar-btm\" style=\"padding-bottom: 25px;\">";
 												echo "To view a list of keywords from the database, please select a letter of the alphabet ";
 												echo "from the above drop-down menu which will query the database using your ";
 												echo "selection as the first character of a keyword.";
 												echo "</div>";
-											//	echo "</div>";
-											//	echo "</div>";
+												echo "</div>";
+												echo "</div>";
 											?>
                                         </div>
                                     </div>
                                     <div class="tab-pane fade" id="asd-tab-2">
-                                        <p class="pad-all text-lg">HISTORY</p>
-                                        <div class="pad-hor" style="text-align: left;">
-Curabitur id dui a nisi aliquet ullamcorper nec eu sapien. Fusce lacinia pulvinar condimentum. Nulla facilisi. Sed iaculis erat lacus, sit amet tempor erat pharetra ultricies. Pellentesque fermentum blandit lacus, at volutpat purus volutpat et. Integer mattis magna at porta imperdiet. Integer eget nibh vulputate, vehicula nibh in, iaculis dui. Maecenas arcu justo, pharetra vitae pulvinar at, convallis sed mauris. Fusce eu imperdiet felis. Nunc euismod erat eget tortor viverra, quis dapibus diam ornare. Ut consectetur sed lectus at aliquam. Nulla facilisi. Morbi aliquam, lectus nec tristique malesuada, sapien metus ullamcorper nibh, in molestie turpis dolor rutrum dui.
+                                        <p class="pad-all text-lg">HISTORY &nbsp; <?php
+                                        	echo "<a href=\"javascript: ";
+											echo "var doAuditA = $('#auditHistoryPanel').fadeOut('fast', function(){ ";
+											echo "var doAuditB = $('#auditHistoryPanel').load('./data_history.php','', function(){ ";
+											echo "var doAuditC = $('#auditHistoryPanel').fadeIn('slow'); ";
+											echo "}); ";
+											echo "}); ";
+											echo "\" >";
+										?><i class="ti-reload text-right"></i></a></p>
+                                        <div id="auditHistoryPanel" class="pad-hor" style="text-align: left;">
+											<?php
+												$reload = "yes";
+												include("./data_history.php");
+											?>
                                         </div>
                                     </div>
                                 </div>
@@ -535,7 +545,7 @@ Curabitur id dui a nisi aliquet ullamcorper nec eu sapien. Fusce lacinia pulvina
 
 ?>         
         	<footer id="footer">
-				<div class="hide-fixed pull-right pad-rgt">Last Updated: 5 September 2016</div>
+				<div class="hide-fixed pull-right pad-rgt">Last Updated: 6 September 2016</div>
 				<p class="pad-lft">Western Sydney University &#0169; <?php echo date("Y",time()); ?></p>
 			</footer>
             <button class="scroll-top btn"><i class="pci-chevron chevron-up"></i></button>

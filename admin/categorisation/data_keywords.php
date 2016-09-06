@@ -29,7 +29,7 @@
 //
 //  VERSION 0.1
 //  15-18 August 2016
-//	5 September 2016
+//	5-6 September 2016
 //
 //
 /////////////////////////////////////////////////////////// Collect session data
@@ -210,10 +210,26 @@
 			echo "</a>";
     		echo "</div>";
 			
+/////////////////////////////////////////////////////////// Div for last update if exists
+
+			if(($ID != "")) {
+				$lastTime = "";
+				$queryD = "SELECT * FROM manuscript_cat_audit WHERE super_book_code LIKE \"$ID\" ORDER BY ID DESC LIMIT 1";
+				$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
+				while($rowD = mysqli_fetch_row($mysqli_resultD)) {
+					$lastTime = $rowD[2];	
+				}
+				if(($lastTime != "")) {
+					echo "<div id=\"tagsManagerTimeStamp\" class=\"mar-top text-sm text-right\">";
+					echo "<em><strong>Last Updated: </strong>$lastTime</em>";
+					echo "</div>";	
+				}
+			}
+			
 /////////////////////////////////////////////////////////// Div for recent categorisation tags
 
 			echo "<div id=\"tagsManagerRecent\" class=\"pad-top mar-top\">";
-			echo "<h4>RECENT TAGS</h4>";
+			echo "<h4>RECENTLY USED TAGS</h4>";
 			echo "<hr />";
 			echo "</div>";
 
@@ -352,16 +368,19 @@
     			});		
 				
 <?php
-
 				if(($action == "save") && ($save == "y")) {
 					echo "var doButton = $('#btn_".$ID."').html('Yes');\n\n";
 					echo "var doClass = $('#btn_".$ID."').removeClass('btn-pink').addClass('btn-success');\n\n";
+					echo "var doAuditA = $('#auditHistoryPanel').fadeOut('fast', function(){ ";
+					echo "var doAuditB = $('#auditHistoryPanel').load('./data_history.php','', function(){ ";
+					echo "var doAuditC = $('#auditHistoryPanel').fadeIn('slow'); ";
+					echo "}); ";
+					echo "}); ";
 				}
 				
 				if(($action == "save")) {
 					echo "var doAlert = $('#alertKeywords').delay(5000).fadeOut();\n\n";	
 				}
-
 ?>								
 		
 			</script>
