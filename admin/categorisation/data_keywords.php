@@ -29,7 +29,7 @@
 //
 //  VERSION 0.1
 //  15-18 August 2016
-//	5-6 September 2016
+//	5-7 September 2016
 //
 //
 /////////////////////////////////////////////////////////// Collect session data
@@ -192,7 +192,7 @@
     		echo "placeholder=\"Start typing a tag or click to clear ...\" ";
     		echo "class=\"title-tagger input-sm text-dark tm-input\" ";
     		echo "style=\"display: block; width: 100%; min-width: 100%;\" ";
-    		echo "onclick=\"var cleanBar = $('#titleTagger').val('');\" />";
+    		echo "onclick=\"var cleanBar = $('#titleTagger').typeahead('val','');\" />";
 			echo "<a href=\"javascript: ";	
 			echo "var rKey = $('#titleTaggerList').val(); ";
 			echo "var dataE = '";	
@@ -206,13 +206,13 @@
 			echo "}); ";
 			echo "}); ";
 			echo "\">";
-			echo "<button class=\"btn btn-block btn-purple mar-top\">Save Keyword Assignment</button>";
+			echo "<button class=\"btn btn-block btn-purple mar-top\">Save Keyword Assignment(s)</button>";
 			echo "</a>";
     		echo "</div>";
 			
 /////////////////////////////////////////////////////////// Div for last update if exists
 
-			if(($ID != "")) {
+			if(($ID != "") && ($showUpdateTime == "y")) {
 				$lastTime = "";
 				$queryD = "SELECT * FROM manuscript_cat_audit WHERE super_book_code LIKE \"$ID\" ORDER BY ID DESC LIMIT 1";
 				$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
@@ -342,7 +342,6 @@
 /////////////////////////////////////////////////////////// Page Scripts
 			
 ?>
-			<script language="javascript" type="text/javascript" src="./js/typeahead.bundle.js"></script>
 			<script language="javascript" type="text/javascript" >
 			
 				$('[data-toggle="tooltip"]').tooltip({
@@ -350,22 +349,6 @@
 					html: true,
 					trigger : 'hover'
 				});
-
-				var preKeywords = new Bloodhound({
-      				datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
-      				queryTokenizer: Bloodhound.tokenizers.whitespace,
-      				limit: 10,
-      				prefetch: {
-        				url: './data_prefetch.php?r=<?php echo time(); ?>',
-        				filter: function (list) {
-          					return $.map(list, function (preKeyword) {
-            					return { name: preKeyword };
-          					});
-        				}
-      				}
-    			});
- 
-    			preKeywords.initialize();
 
 				var tagApi = $(".title-tagger").tagsManager({
     				prefilled: [<?php
@@ -393,13 +376,29 @@
 					tagClass: 'tm-tag'
   				});
 
+				var preKeywords = new Bloodhound({
+      				datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+      				queryTokenizer: Bloodhound.tokenizers.whitespace,
+      				limit: 10,
+      				prefetch: {
+        				url: './data_prefetch.php?r=<?php echo time(); ?>',
+        				filter: function (list) {
+          					return $.map(list, function (preKeyword) {
+            					return { name: preKeyword };
+          					});
+        				}
+      				}
+    			});
+ 
+    			preKeywords.initialize();
+				
 				$(".title-tagger").typeahead(null, {
       				name: 'preKeywords',
       				displayKey: 'name',
       				source: preKeywords.ttAdapter()
     			}).on('typeahead:selected', function (e, d) {
         			tagApi.tagsManager("pushTag", d.name);
-    			});		
+    			});						
 				
 <?php
 				if(($action == "save") && ($save == "y")) {

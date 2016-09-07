@@ -29,7 +29,7 @@
 //
 //  VERSION 0.1
 //  15-18 August 2016
-//	5 September 2016
+//	5-7 September 2016
 //
 //
 /////////////////////////////////////////////////////////// Collect session data
@@ -94,7 +94,7 @@
   	VERSION 0.1
     
   	Development Started: 15 August 2016
-	Last updated: 6 September 2016
+	Last updated: 7 September 2016
 
 
 
@@ -133,24 +133,24 @@
 		<meta http-equiv='expires' content='0' />
 		<meta http-equiv='pragma' content='no-cache' />
 		<meta name="msapplication-TileColor" content="#ffffff" />
-		<meta name="msapplication-TileImage" content="/ms-icon-144x144.png" />
+		<meta name="msapplication-TileImage" content="./icons/ms-icon-144x144.png" />
 		<meta name="theme-color" content="#ffffff" />  
-        <link rel="apple-touch-icon" href="./apple-icon.png" />
-		<link rel="apple-touch-icon" sizes="57x57" href="./apple-icon-57x57.png" />
-		<link rel="apple-touch-icon" sizes="60x60" href="./apple-icon-60x60.png" />
-		<link rel="apple-touch-icon" sizes="72x72" href="./apple-icon-72x72.png" />
-		<link rel="apple-touch-icon" sizes="76x76" href="./apple-icon-76x76.png" />
-		<link rel="apple-touch-icon" sizes="114x114" href="./apple-icon-114x114.png" />
-		<link rel="apple-touch-icon" sizes="120x120" href="./apple-icon-120x120.png" />
-		<link rel="apple-touch-icon" sizes="144x144" href="./apple-icon-144x144.png" />
-		<link rel="apple-touch-icon" sizes="152x152" href="./apple-icon-152x152.png" />
-		<link rel="apple-touch-icon" sizes="180x180" href="./apple-icon-180x180.png" />
-		<link rel="icon" type="image/png" sizes="192x192"  href="./android-icon-192x192.png" />
-		<link rel="icon" type="image/png" sizes="32x32" href="./favicon-32x32.png" />
-		<link rel="icon" type="image/png" sizes="96x96" href="./favicon-96x96.png" />
-		<link rel="icon" type="image/png" sizes="16x16" href="./favicon-16x16.png" />
-        <link rel="icon" type="image/x-icon" href="./favicon.ico" />
-		<link rel="shortcut icon" type="image/x-icon" href="./favicon.ico" />     
+        <link rel="apple-touch-icon" href="./icons/apple-icon.png" />
+		<link rel="apple-touch-icon" sizes="57x57" href="./icons/apple-icon-57x57.png" />
+		<link rel="apple-touch-icon" sizes="60x60" href="./icons/apple-icon-60x60.png" />
+		<link rel="apple-touch-icon" sizes="72x72" href="./icons/apple-icon-72x72.png" />
+		<link rel="apple-touch-icon" sizes="76x76" href="./icons/apple-icon-76x76.png" />
+		<link rel="apple-touch-icon" sizes="114x114" href="./icons/apple-icon-114x114.png" />
+		<link rel="apple-touch-icon" sizes="120x120" href="./icons/apple-icon-120x120.png" />
+		<link rel="apple-touch-icon" sizes="144x144" href="./icons/apple-icon-144x144.png" />
+		<link rel="apple-touch-icon" sizes="152x152" href="./icons/apple-icon-152x152.png" />
+		<link rel="apple-touch-icon" sizes="180x180" href="./icons/apple-icon-180x180.png" />
+		<link rel="icon" type="image/png" sizes="192x192"  href="./icons/android-icon-192x192.png" />
+		<link rel="icon" type="image/png" sizes="32x32" href="./icons/favicon-32x32.png" />
+		<link rel="icon" type="image/png" sizes="96x96" href="./icons/favicon-96x96.png" />
+		<link rel="icon" type="image/png" sizes="16x16" href="./icons/favicon-16x16.png" />
+        <link rel="icon" type="image/x-icon" href="./icons/favicon.ico" />
+		<link rel="shortcut icon" type="image/x-icon" href="./icons/favicon.ico" />     
         <link rel="manifest" href="./manifest.json" />        
         <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700&amp;subset=latin">
 		<link rel="stylesheet" type="text/css" href="./css/bootstrap.min.css">
@@ -188,7 +188,7 @@
 			}
 			
 			.tt-hint {
-				color: #999
+				color: #999;
 			}
 			
 			.tt-menu {
@@ -243,6 +243,12 @@
 				font-size: 0.8em;
 			}
 			
+			.btn-default {
+				margin-bottom: 2px;
+				margin-right: 2px;
+				min-width: 55px;	
+			}
+			
 		</style>
     </head>   
 	<body>
@@ -267,7 +273,7 @@
                			</ul>
                     //-->
                         <ul class="nav navbar-top-links pull-left">
-                    		<li style="font-size: 1.2em; padding: 0.5em;" class="text-bold">&nbsp; &nbsp;CATEGORISATION TOOLKIT</li>
+                    		<li style="font-size: 1.2em; padding: 0.5em;" class="text-bold">&nbsp; &nbsp;CATEGORISATION TOOLKIT (Last Updated 7 September 2016)</li>
                			</ul>
                         <ul class="nav navbar-top-links pull-right">
 							<li><a href="#" class="aside-toggle navbar-aside-icon"><i class="pci-ver-dots"></i></a></li>
@@ -479,7 +485,10 @@
                                     	<h3 class="panel-title">DETAILS</h3>
                                 	</div>
                                     <div id="titleDetail" class="panel-body text-light" style="text-align: left;">
-<p>When a title is selected from the database, details from one of its editions will display here. If there is more than one edition attached to the work then the edition is selected randomly.</p>
+										<p>When a title is selected from the database, details from one of its editions will display here. 
+                                        If there is more than one edition attached to the work then the edition is selected randomly.</p>
+										<p>&nbsp;</p>
+										<p><img class="mar-top bord-all" src="./icons/cover_image.jpg" width="100%" border="0"></p>
                                     </div>
 								</div>                                
                             </div>                           
@@ -494,7 +503,9 @@
                                     	<h3 class="panel-title">KEYWORDS</h3>
                                 	</div>
                                     <div id="titleTags" class="panel-body text-dark" style="text-align: left;">
-<p>When the <em>Edit Keywords</em> button is clicked, this panel will load the form for assigning, adding, deleting or modifying existing keywords that are associated with the work highlighted in the middle panel. Please note that keywords are assigned at the <em>Work</em> level rather than at the edition or manifestation level.</p>
+										<p>When the <em>Edit Keywords</em> button is clicked, this panel will load the form for assigning, adding, 
+                                        deleting or modifying existing keywords that are associated with the work highlighted in the middle panel. 
+                                        Please note that keywords are assigned at the <em>Work</em> level rather than at the edition or manifestation level.</p>
                                     </div>
 								</div>
                             </div>                             
@@ -515,8 +526,8 @@
                             	<div class="nano-content">
                                     <div id="mainnav-shortcut">
                                         <ul class="list-unstyled">
-                                            <li class="col-xs-4" data-content="Tag Works"><a class="shortcut-grid" href="./index.php"><i class="ti-info-alt"></i></a></li>
-                                            <li class="col-xs-4" data-content="Edit Tags (Coming Soon)"><a class="shortcut-grid" href="#"><i class="ti-tag"></i></a></li>
+                                            <li class="col-xs-4" data-content="Assign Keywords"><a class="shortcut-grid" href="./index.php"><i class="ti-info-alt"></i></a></li>
+                                            <li class="col-xs-4" data-content="Edit Keywords List (Coming Soon)"><a class="shortcut-grid" href="#"><i class="ti-tag"></i></a></li>
                                         </ul>
                                     </div>
 									<!-- 
@@ -571,13 +582,25 @@
 					                            </ul>
 					                        </div>
                                             <?php
+												echo "<div id=\"tagsSearchInput\" class=\"mar-ver text-dark\">";
+												echo "<input type=\"text\" ";
+    											echo "name=\"taggerSearch\" ";
+    											echo "autocomplete=\"off\" ";
+    											echo "id=\"taggerSearch\" ";
+    											echo "placeholder=\"Start typing a tag or click to clear ...\" ";
+    											echo "class=\"input-sm text-dark tm-input\" ";
+    											echo "style=\"display: block; width: 100%; min-width: 100%;\" ";
+    											echo "onclick=\"var cleanBar = $('#taggerSearch').typeahead('val','');\" />";
+												echo "</div>";
+											?>
+                                            <?php
 												echo "<div class=\"panel panel-bordered panel-primary mar-top\" ";
 												echo "style=\"border: 0px solid 1690F3; background-color: #063D6B;\">";
     											echo "<div class=\"panel-body\">";
 												echo "<div id=\"keywordsList\" class=\"text-light text-left mar-top mar-btm\" style=\"padding-bottom: 25px;\">";
 												echo "To view a list of keywords from the database, please select a letter of the alphabet ";
 												echo "from the above drop-down menu which will query the database using your ";
-												echo "selection as the first character of a keyword.";
+												echo "selection as the first character of a keyword or begin typing a tag in the input box above. ";
 												echo "</div>";
 												echo "</div>";
 												echo "</div>";
@@ -629,10 +652,11 @@
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// Scripts
 
 ?> 
+		<script language="javascript" type="text/javascript" src="./js/typeahead.bundle.js"></script>
 		<script language="javascript" type="text/javascript" >
 		
-			$(window).on('load', function() {
-				
+			$(window).on('load', function() {	
+					
 				$('#dt-basic').dataTable( {
         			"responsive": false,
 					"order": [[ 1, "asc" ]],
@@ -646,8 +670,38 @@
 //              			"next": '<i class="ti-angle-right"></i>'
 //	           			}
 //	      			}
+    			});	
+				
+				var preKeywordsB = new Bloodhound({
+      				datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
+      				queryTokenizer: Bloodhound.tokenizers.whitespace,
+      				limit: 10,
+      				prefetch: {
+        				url: './data_prefetch.php?r=<?php echo time(); ?>',
+        				filter: function (list) {
+          					return $.map(list, function (preKeyword) {
+            					return { name: preKeyword };
+          					});
+        				}
+      				}
     			});
-			
+ 
+    			preKeywordsB.initialize();
+				
+				$("#taggerSearch").typeahead(null, {
+      				name: 'preKeywordsB',
+      				displayKey: 'name',
+      				source: preKeywordsB.ttAdapter()
+    			}).on('typeahead:selected', function (e, d) {
+        			tagApi.tagsManager("pushTag", d.name);
+					var dataA = "kName="+d.name+"&action=yes";
+					var doAssA = $('#tagAssociationsList').fadeOut('fast', function(){
+						var doAssB = $('#tagAssociationsList').load('./data_keywords_assoc.php',dataA, function(){
+							var doAssB = $('#tagAssociationsList').fadeIn('slow');
+						});
+					});
+    			});									
+							
 			});
 		
 		</script>

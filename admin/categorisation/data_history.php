@@ -63,7 +63,13 @@
 		$keywordTotal = $rowD[0];
 	}
 	$progress = round(($keywordTotal / $fullTotal) * 100);
-	echo "<div class=\"progress progress-lg\"><div style=\"width: ".$progress."%;\" class=\"progress-bar progress-bar-success\">".$progress."%</div></div>";
+	echo "<div class=\"pad-ver\">";
+	echo "<p class=\"mar-no\"><span class=\"pull-right text-bold\">$keywordTotal</span>Completed</p>";
+	echo "<p class=\"mar-no\"><span class=\"pull-right text-bold\">$fullTotal</span>Total</p>";
+	echo "</div>";
+	echo "<div class=\"progress progress-lg\">";
+	echo "<div style=\"width: ".$progress."%;\" class=\"progress-bar progress-bar-success\">".$progress."%</div>";
+	echo "</div>";
 	
 /////////////////////////////////////////////////////////// Load audit
 

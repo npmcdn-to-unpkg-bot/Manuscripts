@@ -28,7 +28,7 @@
 //	Nifty Responsive Admin Template | https://wrapbootstrap.com/theme/nifty-responsive-admin-template-WB0048JF7
 //
 //  VERSION 0.1
-//	5-6 September 2016
+//	5-7 September 2016
 //
 //
 /////////////////////////////////////////////////////////// Collect session data

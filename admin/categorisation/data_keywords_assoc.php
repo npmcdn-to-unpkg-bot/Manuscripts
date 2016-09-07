@@ -28,7 +28,7 @@
 //	Nifty Responsive Admin Template | https://wrapbootstrap.com/theme/nifty-responsive-admin-template-WB0048JF7
 //
 //  VERSION 0.1
-//	6 September 2016
+//	6-7 September 2016
 //
 //
 /////////////////////////////////////////////////////////// Clean post and get	
@@ -47,8 +47,16 @@
 			die;
 		}
 		$kID = $_GET["kID"];
+		$kName = $_GET["kName"];
 		$_GET = array();
 		$_POST = array();
+		if(($kName != "") && ($kID == "")) {
+			$queryD = "SELECT * FROM keywords WHERE keyword LIKE \"$kName\"";
+			$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
+			while($rowD = mysqli_fetch_row($mysqli_resultD)) {
+				$kID = $rowD[0];
+			}
+		}
 	}
 	
 /////////////////////////////////////////////////////////// Load associations
@@ -87,11 +95,23 @@
 			$queryD = "SELECT * FROM keywords WHERE keyword_code LIKE \"$go[1]\"";
 			$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
 			while($rowD = mysqli_fetch_row($mysqli_resultD)) {
+				$dText = "<strong>".strtoupper($rowD[1])."</strong><br /><br />$rowD[2]";
 				echo "<li>";
 				echo "<a href=\"javascript: ";
-				echo "var doThis = tagApi.tagsManager('pushTag','$rowD[1]'); \" ";
+				echo "var doThis = tagApi.tagsManager('pushTag','$rowD[1]'); \" ";			
+				echo "class=\"add-tooltip\" ";
+				echo "data-toggle=\"tooltipP\" ";
+				echo "data-container=\"body\" ";
+				echo "data-placement=\"left\" ";
+				echo "data-original-title=\"";
+				echo $dText;
+				echo "\" ";				
 				echo "style=\"color:#333333;\" >";
-				echo "$rowD[1]";
+				if(($go[1] == $kID)) {
+					echo "<strong>$rowD[1]</strong>";
+				} else {
+					echo "$rowD[1]";
+				}
 				echo "</a></li>";
 			}
 			if(($count > 8)) {
@@ -113,3 +133,12 @@
 	include("../era.dbdisconnect.php");
 
 ?>
+			<script language="javascript" type="text/javascript" >
+			
+				$('[data-toggle="tooltipP"]').tooltip({
+					template: '<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner" style="border: 3px solid #ffffff; color: #000000; background-color:#6ab5f1; padding:20px;"></div></div>',
+					html: true,
+					trigger : 'hover'
+				});
+				
+			</script>
