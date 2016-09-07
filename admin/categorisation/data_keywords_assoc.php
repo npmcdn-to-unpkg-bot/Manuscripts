@@ -130,7 +130,9 @@
 	
 /////////////////////////////////////////////////////////// Finish
 
-	include("../era.dbdisconnect.php");
+	if(($reload == "")) {
+		include("../era.dbdisconnect.php");
+	}
 
 ?>
 			<script language="javascript" type="text/javascript" >

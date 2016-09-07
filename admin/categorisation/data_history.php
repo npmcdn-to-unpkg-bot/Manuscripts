@@ -28,7 +28,7 @@
 //	Nifty Responsive Admin Template | https://wrapbootstrap.com/theme/nifty-responsive-admin-template-WB0048JF7
 //
 //  VERSION 0.1
-//	6 September 2016
+//	6-7 September 2016
 //
 //
 /////////////////////////////////////////////////////////// Clean post and get	
@@ -151,7 +151,9 @@
 	
 /////////////////////////////////////////////////////////// Finish
 
-	include("../era.dbdisconnect.php");
+	if(($reload == "")) {
+		include("../era.dbdisconnect.php");
+	}
 
 ?>
 			<script language="javascript" type="text/javascript" >

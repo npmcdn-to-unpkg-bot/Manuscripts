@@ -59,7 +59,13 @@
 	$searchLetter = mysql_real_escape_string($_GET["searchLetter"]);
 	if(($searchLetter == "") or (!in_array($searchLetter, $alphabetNumerical))) { $searchLetter = "a"; }
 	$_GET = array();
-	$_POST = array();	
+	$_POST = array();
+	
+/////////////////////////////////////////////////////////// Ideological keywords array	
+
+	$ideologicalWords = array("Anti-Aristocratic Works","Anti-clerical Works","apologetic Works","Catholic Text","Christian Enlightenment Text",
+		"Erotic Works","Irreligious Works","Jansenist Text","Libertine Texts","Philosophie","Pornographic Works","Protestant Texts","Satirical Works",
+		"Sceptical Works","Spurious Works","Works of Religiosity");	
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// Page header
 
@@ -160,6 +166,7 @@
         <link rel="stylesheet" type="text/css" href="./css/themes/type-c/theme-ocean.min.css">
         <link rel="stylesheet" type="text/css" href="./plugins/datatables/media/css/dataTables.bootstrap.css">
 		<link rel="stylesheet" type="text/css" href="./plugins/datatables/extensions/Responsive/css/dataTables.responsive.css">
+        <link rel="stylesheet" type="text/css" href="./plugins/ionicons/css/ionicons.min.css" >
         <link rel="stylesheet" type="text/css" href="./js/bootstrap-tagmanager/tagmanager.css">        
 		<script language="javascript" type="text/javascript" src="./js/pace.min.js"></script>
         <script language="javascript" type="text/javascript" src="./js/jquery-2.2.4.min.js"></script>
@@ -555,8 +562,9 @@
                         <div class="nano">
                             <div class="nano-content">
                                 <ul class="nav nav-tabs nav-justified">
-                                    <li class="active"><a href="#asd-tab-1" data-toggle="tab"><i class="ti-info-alt"></i></a></li>
-                                    <li><a href="#asd-tab-2" data-toggle="tab"><i class="ti-settings"></i></a></li>
+                                    <li class="active"><a href="#asd-tab-1" data-toggle="tab"><i class="ion-ios-pricetag"></i></a></li>
+                                    <li><a href="#asd-tab-2" data-toggle="tab"><i class="ion-ios-home"></i></a></li>
+                                    <li><a href="#asd-tab-3" data-toggle="tab"><i class="ion-ios-star"></i></a></li>
                                 </ul>
                                 <div class="tab-content">
                                     <div class="tab-pane fade in active" id="asd-tab-1">
@@ -618,7 +626,7 @@
 											echo "}); ";
 											echo "}); ";
 											echo "\" >";
-										?><i class="ti-reload text-right"></i></a></p>
+										?><i class="ion-loop text-right"></i></a></p>
                                         <div id="auditHistoryPanel" class="pad-hor" style="text-align: left;">
 											<?php
 												$reload = "yes";
@@ -627,6 +635,50 @@
                                         </div>
                                         <p>&nbsp;</p>
                                         <p>&nbsp;</p>
+                                    </div>
+                                    <div class="tab-pane fade" id="asd-tab-3">
+                                    	<p class="pad-all text-lg">IDEOLOGICAL KEYWORDS</p>
+                                    	<div class="pad-hor" style="text-align: left;">
+                                        	<?php
+                                    			echo "<div class=\"panel panel-bordered panel-primary mar-top\" ";
+												echo "style=\"border: 0px solid 1690F3; background-color: #063D6B;\">";
+    											echo "<div class=\"panel-body\">";
+												echo "<div id=\"ideologicalList\" class=\"text-light text-left mar-top mar-btm\" style=\"padding-bottom: 25px;\">";
+												echo "<p>";
+                                    			foreach($ideologicalWords as $iw) {													
+													$queryZ = "SELECT * FROM keywords WHERE keyword LIKE \"$iw\" ORDER BY keyword ASC";
+													$mysqli_resultZ = mysqli_query($mysqli_link, $queryZ);
+													echo mysqli_error($mysqli_resultZ);
+													while($rowZ = mysqli_fetch_row($mysqli_resultZ)) {	
+														echo "<a href=\"javascript: ";
+														echo "var doThis = tagApi.tagsManager('pushTag','".ucwords($rowZ[1])."'); ";
+														echo "var dataA = 'kID=".$rowZ[0]."&action=yes'; ";
+														echo "var doAssA = $('#tagAssociationsList').fadeOut('fast', function(){ ";
+														echo "var doAssB = $('#tagAssociationsList').load('./data_keywords_assoc.php',dataA, function(){ ";
+														echo "var doAssB = $('#tagAssociationsList').fadeIn('slow'); ";
+														echo "}); ";
+														echo "}); ";
+														echo "\" ";
+														echo "style=\"color:#FFFFFF;\" ";
+														echo "class=\"add-tooltip\" ";
+														echo "data-toggle=\"tooltipABC\" ";
+														echo "data-container=\"body\" ";
+														echo "data-placement=\"left\" ";
+														echo "data-original-title=\"";
+														echo "<strong>".strtoupper($rowZ[1])."</strong><br /><br />$rowZ[2]";
+														echo "\" ";
+														echo ">";	
+														echo ucwords($rowZ[1]);
+														echo "</a>";
+														echo "<br />";
+													}
+												}
+												echo "</p>";
+												echo "</div>";
+												echo "</div>";
+												echo "</div>";                                    	
+											?>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -654,6 +706,12 @@
 ?> 
 		<script language="javascript" type="text/javascript" src="./js/typeahead.bundle.js"></script>
 		<script language="javascript" type="text/javascript" >
+		
+			$('[data-toggle="tooltipABC"]').tooltip({
+				template: '<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner" style="border: 3px solid #ffffff; color: #000000; background-color:#6ab5f1; padding:20px;"></div></div>',
+				html: true,
+				trigger : 'hover'
+			});
 		
 			$(window).on('load', function() {	
 					
