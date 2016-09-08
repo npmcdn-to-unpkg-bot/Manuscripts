@@ -29,7 +29,7 @@
 //
 //  VERSION 0.1
 //  15-18 August 2016
-//	5-7 September 2016
+//	5-8 September 2016
 //
 //
 /////////////////////////////////////////////////////////// Collect session data
@@ -37,7 +37,7 @@
 	$MerdUser = session_id();
 	if(empty($MerdUser)) { session_start(); }
 	$SIDmerd = session_id(); 
-	$defText = "<p>When the <em>Edit Keywords</em> button is clicked, this panel will load the form for assigning, adding, deleting or modifying existing keywords that are associated with the work highlighted in the middle panel. Please note that keywords are assigned at the <em>Work</em> level rather than at the edition or manifestation level.</p>";
+	$defText = "<p>When the <em>Add Keywords</em> or <em>Edit Keywords</em> button is clicked, this panel will load the form for assigning, adding, deleting or modifying existing keywords that are associated with the work highlighted in the middle panel. Please note that keywords are assigned at the <em>Work</em> level rather than at the edition or manifestation level.</p>";
 	
 /////////////////////////////////////////////////////////// Clean post and get	
 	
@@ -65,7 +65,7 @@
 		$new_keywords = $rKeywords;
 		$rIDs = array();
 		$frIDs = "";
-		if(($rKeywords != "")) {
+//		if(($rKeywords != "")) {
 			if(preg_match("/\|/i","$rKeywords")) {
 				$rKeys = explode("|","$rKeywords");
 				foreach($rKeys as $ky) {
@@ -118,9 +118,9 @@
 			} else {
 				$save = "n";
 			}
-		} else {
-			$save = "n";
-		}
+//		} else {
+//			$save = "n";
+//		}
 	}
 
 /////////////////////////////////////////////////////////// Data routine for existing keywords
@@ -239,7 +239,7 @@
 			echo "<div class=\"panel panel-bordered-primary bg-gray\">";
     		echo "<div class=\"panel-body\">";
 			echo "<div id=\"tagAssociationsList\">";
-			echo "No term selected from tag list.";
+			echo "No term selected from tag list. To show associated keywords, please slide out the right-hand panel and select a tag.";
 			echo "</div>";
 			echo "</div>";
 			echo "</div>";
@@ -261,7 +261,7 @@
 			$priorTags = "";
 			$priorTagsA = array();
 			$priorTagsB = array();
-			$queryD = "SELECT DISTINCT(new_keywords) FROM manuscript_cat_audit ORDER BY ID DESC LIMIT 2";
+			$queryD = "SELECT DISTINCT(new_keywords) FROM manuscript_cat_audit WHERE new_keywords != \"\" ORDER BY ID DESC LIMIT 2";
 			$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
 			while($rowD = mysqli_fetch_row($mysqli_resultD)) {
 				if(($o == 1)) {
@@ -403,7 +403,11 @@
 <?php
 				if(($action == "save") && ($save == "y")) {
 					echo "var doButton = $('#btn_".$ID."').html('Yes');\n\n";
-					echo "var doClass = $('#btn_".$ID."').removeClass('btn-pink').addClass('btn-success');\n\n";
+					if(($rKeywords != "")) {
+						echo "var doClass = $('#btn_".$ID."').removeClass('btn-pink').addClass('btn-success');\n\n";
+					} else {
+						echo "var doClass = $('#btn_".$ID."').removeClass('btn-success').addClass('btn-pink');\n\n";
+					}
 					echo "var doAuditA = $('#auditHistoryPanel').fadeOut('fast', function(){ ";
 					echo "var doAuditB = $('#auditHistoryPanel').load('./data_history.php','', function(){ ";
 					echo "var doAuditC = $('#auditHistoryPanel').fadeIn('slow'); ";

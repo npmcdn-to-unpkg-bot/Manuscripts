@@ -100,7 +100,7 @@
   	VERSION 0.1
     
   	Development Started: 15 August 2016
-	Last updated: 7 September 2016
+	Last updated: 8 September 2016
 
 
 
@@ -167,7 +167,8 @@
         <link rel="stylesheet" type="text/css" href="./plugins/datatables/media/css/dataTables.bootstrap.css">
 		<link rel="stylesheet" type="text/css" href="./plugins/datatables/extensions/Responsive/css/dataTables.responsive.css">
         <link rel="stylesheet" type="text/css" href="./plugins/ionicons/css/ionicons.min.css" >
-        <link rel="stylesheet" type="text/css" href="./js/bootstrap-tagmanager/tagmanager.css">        
+        <link rel="stylesheet" type="text/css" href="./js/bootstrap-tagmanager/tagmanager.css">
+        <link rel="stylesheet" type="text/css" href="./js/fancybox/jquery.fancybox.css" media="screen" />     
 		<script language="javascript" type="text/javascript" src="./js/pace.min.js"></script>
         <script language="javascript" type="text/javascript" src="./js/jquery-2.2.4.min.js"></script>
 		<script language="javascript" type="text/javascript" src="./js/bootstrap.min.js"></script>
@@ -176,6 +177,7 @@
 		<script language="javascript" type="text/javascript" src="./plugins/datatables/media/js/dataTables.bootstrap.js"></script>
 		<script language="javascript" type="text/javascript" src="./plugins/datatables/extensions/Responsive/js/dataTables.responsive.min.js"></script>
         <script language="javascript" type="text/javascript" src="./js/bootstrap-tagmanager/tagmanager.js"></script>
+        <script language="javascript" type="text/javascript" src="./js/fancybox/jquery.fancybox.pack.js"></script> 
 <?php
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// Manual CSS Interventions
@@ -280,7 +282,7 @@
                			</ul>
                     //-->
                         <ul class="nav navbar-top-links pull-left">
-                    		<li style="font-size: 1.2em; padding: 0.5em;" class="text-bold">&nbsp; &nbsp;CATEGORISATION TOOLKIT (Last Updated 7 September 2016)</li>
+                    		<li style="font-size: 1.2em; padding: 0.5em;" class="text-bold">&nbsp; &nbsp;CATEGORISATION TOOLKIT (Last Updated 8 September 2016)</li>
                			</ul>
                         <ul class="nav navbar-top-links pull-right">
 							<li><a href="#" class="aside-toggle navbar-aside-icon"><i class="pci-ver-dots"></i></a></li>
@@ -356,6 +358,8 @@
                                      			<tr>
                                         			<th>ID</th>
                                          			<th>TITLE</th>
+                                                    <th>VALID</th>
+                                                    <th>PARIS</th>
                                                     <th>TAGS</th>
                                       			</tr>
                                   			</thead>
@@ -424,8 +428,14 @@
 												$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
 												while($rowD = mysqli_fetch_row($mysqli_resultD)) {
 													$ID = strtoupper($rowD[0]);
+													
+/////////////////////////////////////////////////////////// Display ID													
+													
 													echo "<tr>";
 													echo "<td class=\"text-right\">$ID</td>";
+													
+/////////////////////////////////////////////////////////// Display title													
+													
 													echo "<td>";
 													echo "<a href=\"javascript: ";
 													echo "var dataE = 'ID=$ID'; ";
@@ -438,8 +448,73 @@
 													echo "<strong>$rowD[1]</strong>";
 													echo "</a>";
 													echo "</td>";
+													
+/////////////////////////////////////////////////////////// Display valid status													
+													
 													echo "<td>";
-													if(($rowD[2] != "") or ($rowD[3] != "")) {
+													$valid = "y";
+													$queryFU = "SELECT * FROM manuscript_cat_problem WHERE super_book_code = \"$ID\" ";
+													$mysqli_resultFU = mysqli_query($mysqli_link, $queryFU);
+													while($rowFU = mysqli_fetch_row($mysqli_resultFU)) {
+														$valid = "no";
+													}
+													if(($valid == "y")) {
+														echo "<a href=\"javascript: var = doToggle = toggleValid('btn_V".$ID."');\">";
+														echo "<button id=\"".$ID."\" class=\"btn btn-block btn-default btn-toggle\">";													
+														echo "Yes";
+														echo "</button>";
+														echo "</a>";
+													} else {
+														echo "<a href=\"javascript: var = doToggle = toggleValid('btn_V".$ID."');\">";
+														echo "<button id=\"".$ID."\" class=\"btn btn-block btn-pink btn-toggle\">";
+														echo "No";														
+														echo "</button>";
+														echo "</a>";
+													}
+													echo "</td>";
+													
+/////////////////////////////////////////////////////////// Display parisian tag status													
+													
+													echo "<td>";
+													if(($rowD[3] != "")) {
+														echo "<a href=\"javascript: ";
+														echo "var dataE = 'ID=$ID&action=yes'; ";
+														echo "var doDiv = $('#titleDetail').fadeOut('fast', function(){ ";
+														echo "var searchVal = $('#titleDetail').load('./data_titles.php',dataE, function(){ ";
+														echo "var doDivAlso = $('#titleDetail').fadeIn('slow'); ";
+														echo "}); ";
+														echo "}); ";
+														echo "var doDivA = $('#titleTags').fadeOut('fast', function(){ ";
+														echo "var searchValA = $('#titleTags').load('./data_keywords.php','', function(){ ";
+														echo "var doDivAlsoA = $('#titleTags').fadeIn('slow'); ";
+														echo "}); ";
+														echo "}); ";
+														echo "\">";
+														echo "<button id=\"btn_P".$ID."\" class=\"btn btn-block btn-default\">Yes</button>";
+														echo "</a>";
+													} else {
+														echo "<a href=\"javascript: ";
+														echo "var dataE = 'ID=$ID&action=no'; ";
+														echo "var doDiv = $('#titleDetail').fadeOut('fast', function(){ ";
+														echo "var searchVal = $('#titleDetail').load('./data_titles.php',dataE, function(){ ";
+														echo "var doDivAlso = $('#titleDetail').fadeIn('slow'); ";
+														echo "}); ";
+														echo "}); ";
+														echo "var doDivA = $('#titleTags').fadeOut('fast', function(){ ";
+														echo "var searchValA = $('#titleTags').load('./data_keywords.php','', function(){ ";
+														echo "var doDivAlsoA = $('#titleTags').fadeIn('slow'); ";
+														echo "}); ";
+														echo "}); ";
+														echo "\">";
+														echo "<button id=\"btn_P".$ID."\" class=\"btn btn-block btn-pink\">No</button>";	
+														echo "</a>";
+													}
+													echo "</td>";
+
+/////////////////////////////////////////////////////////// Display tags status
+													
+													echo "<td>";
+													if(($rowD[2] != "")) {
 														echo "<a href=\"javascript: ";
 														echo "var dataE = 'ID=$ID&action=yes'; ";
 														echo "var doDiv = $('#titleDetail').fadeOut('fast', function(){ ";
@@ -475,6 +550,7 @@
 													echo "</td>";
 													echo "</tr>\n";
 												}
+												
 											?>
                                 			</tbody>
                                  		</table>
@@ -510,7 +586,8 @@
                                     	<h3 class="panel-title">KEYWORDS</h3>
                                 	</div>
                                     <div id="titleTags" class="panel-body text-dark" style="text-align: left;">
-										<p>When the <em>Edit Keywords</em> button is clicked, this panel will load the form for assigning, adding, 
+										<p>When the <em>Add Keywords</em> or <em>Edit Keywords</em> button is clicked, this panel will 
+                                        load the form for assigning, adding, 
                                         deleting or modifying existing keywords that are associated with the work highlighted in the middle panel. 
                                         Please note that keywords are assigned at the <em>Work</em> level rather than at the edition or manifestation level.</p>
                                     </div>
@@ -533,8 +610,12 @@
                             	<div class="nano-content">
                                     <div id="mainnav-shortcut">
                                         <ul class="list-unstyled">
-                                            <li class="col-xs-4" data-content="Assign Keywords"><a class="shortcut-grid" href="./index.php"><i class="ti-info-alt"></i></a></li>
-                                            <li class="col-xs-4" data-content="Edit Keywords List (Coming Soon)"><a class="shortcut-grid" href="#"><i class="ti-tag"></i></a></li>
+                                            <li class="col-xs-4" data-content="Assign Keywords">
+                                            	<a class="shortcut-grid" href="./index.php"><i class="ti-info-alt"></i></a></li>
+                                            <li class="col-xs-4" data-content="Visualise Keywords (Coming Soon)">
+                                            	<a class="shortcut-grid" id="inlineModal" href="#inlineViz"><i class="ion-stats-bars"></i></a></li>
+                                            <li class="col-xs-4" data-content="Edit Keywords List (Coming Soon)">
+                                            	<a class="shortcut-grid" href="#"><i class="ti-tag"></i></a></li>
                                         </ul>
                                     </div>
 									<!-- 
@@ -701,6 +782,13 @@
         </div>
 <?php
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// Viz Modal
+
+?>        
+        <div style="display:none"><div id="inlineViz">Nothing to see here ... yet!</div></div>
+        <div style="display:none"><div id="theDarkCloset"></div></div>
+<?php
+
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// Scripts
 
 ?> 
@@ -714,6 +802,24 @@
 			});
 		
 			$(window).on('load', function() {	
+			
+				$( ".btn-toggle" ).click(function(event) {
+  					var currentState = $(this).html();
+					if(currentState == "Yes") {
+						var changeState = $(this).html('No');
+						var doClass = $(this).removeClass('btn-default').addClass('btn-pink');
+						var changeID = $(this).attr('id');
+						var dataE = "action=add&super_book_code=" + changeID;
+						var searchValP = $('#theDarkCloset').load('./data_post_valid.php', dataE, function(){});
+						
+					} else {
+						var changeState = $(this).html('Yes');
+						var doClass = $(this).removeClass('btn-pink').addClass('btn-default');
+						var changeID = $(this).attr('id');
+						var dataE = "action=delete&super_book_code=" + changeID;
+						var searchValQ = $('#theDarkCloset').load('./data_post_valid.php', dataE, function(){});
+					}
+				});
 					
 				$('#dt-basic').dataTable( {
         			"responsive": false,
@@ -729,6 +835,27 @@
 //	           			}
 //	      			}
     			});	
+				
+				$("#inlineModal").fancybox({
+					helpers : {
+						overlay : {
+							css : {
+								'background' : 'rgba(38, 50, 56, 0.90)'
+							}
+						}
+					},					
+					maxWidth	: 1200,
+					maxHeight	: 1000,
+					fitToView	: false,
+					width		: '90%',
+					height		: '90%',
+					autoSize	: false,
+					closeClick	: true,
+					openEffect	: 'fade',
+					closeEffect	: 'fade',
+					openSpeed	: 300,
+					closeSpeed	: 100
+				});				
 				
 				var preKeywordsB = new Bloodhound({
       				datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
