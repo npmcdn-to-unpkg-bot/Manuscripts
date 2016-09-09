@@ -47,23 +47,21 @@
 		echo "PROBLEM WITH CHARSET!";
 		die;
 	}
-	$action = $_GET["action"];
-	$super_book_code = $_GET["super_book_code"];
+	$kID = $_GET["ID"];
+	$kName = preg_replace("/\"/i","'",$_GET["kName"]);
+	$kDescription = preg_replace("/\"/i","'",$_GET["kDescription"]);
 	$_GET = array();
 	$_POST = array();
 
-/////////////////////////////////////////////////////////// Data routine
+/////////////////////////////////////////////////////////// Data routines
 
-	if(($action != "") && ($super_book_code != "")) {
-		if(($action == "add")) {
-			$theTime = date("Y-m-d H:i:s",time());
-			$queryD = "INSERT INTO manuscript_cat_problem VALUES(\"0\", \"$super_book_code\", \"$theTime\", \"INVALID\", \"admin\"); ";
-			$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
-		}
-		if(($action == "delete")) {
-			$queryD = "DELETE FROM manuscript_cat_problem WHERE super_book_code = \"$super_book_code\" ";
-			$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
-		}
+	if(($kID != "") && ($kName != "")) {
+		$queryD = "UPDATE keywords SET keyword = \"$kName\" WHERE keyword_code = \"$kID\"";
+		$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
+	}
+	if(($kID != "") && ($kDescription != "")) {
+		$queryD = "UPDATE keywords SET definition = \"$kDescription\" WHERE keyword_code = \"$kID\"";
+		$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
 	}
 
 /////////////////////////////////////////////////////////// Finish

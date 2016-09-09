@@ -29,7 +29,7 @@
 //
 //  VERSION 0.1
 //  15-18 August 2016
-//	5-7 September 2016
+//	5-9 September 2016
 //
 //
 /////////////////////////////////////////////////////////// Collect session data
@@ -100,7 +100,7 @@
   	VERSION 0.1
     
   	Development Started: 15 August 2016
-	Last updated: 8 September 2016
+	Last updated: 9 September 2016
 
 
 
@@ -168,7 +168,8 @@
 		<link rel="stylesheet" type="text/css" href="./plugins/datatables/extensions/Responsive/css/dataTables.responsive.css">
         <link rel="stylesheet" type="text/css" href="./plugins/ionicons/css/ionicons.min.css" >
         <link rel="stylesheet" type="text/css" href="./js/bootstrap-tagmanager/tagmanager.css">
-        <link rel="stylesheet" type="text/css" href="./js/fancybox/jquery.fancybox.css" media="screen" />     
+        <link rel="stylesheet" type="text/css" href="./js/fancybox/jquery.fancybox.css" media="screen" />
+        <link rel="stylesheet" type="text/css" href="./js/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css">  
 		<script language="javascript" type="text/javascript" src="./js/pace.min.js"></script>
         <script language="javascript" type="text/javascript" src="./js/jquery-2.2.4.min.js"></script>
 		<script language="javascript" type="text/javascript" src="./js/bootstrap.min.js"></script>
@@ -178,6 +179,7 @@
 		<script language="javascript" type="text/javascript" src="./plugins/datatables/extensions/Responsive/js/dataTables.responsive.min.js"></script>
         <script language="javascript" type="text/javascript" src="./js/bootstrap-tagmanager/tagmanager.js"></script>
         <script language="javascript" type="text/javascript" src="./js/fancybox/jquery.fancybox.pack.js"></script> 
+        <script language="javascript" type="text/javascript" src="./js/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.js"></script> 
 <?php
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// Manual CSS Interventions
@@ -282,7 +284,7 @@
                			</ul>
                     //-->
                         <ul class="nav navbar-top-links pull-left">
-                    		<li style="font-size: 1.2em; padding: 0.5em;" class="text-bold">&nbsp; &nbsp;CATEGORISATION TOOLKIT (Last Updated 8 September 2016)</li>
+                    		<li style="font-size: 1.2em; padding: 0.5em;" class="text-bold">&nbsp; &nbsp;CATEGORISATION TOOLKIT (Last Updated 9 September 2016)</li>
                			</ul>
                         <ul class="nav navbar-top-links pull-right">
 							<li><a href="#" class="aside-toggle navbar-aside-icon"><i class="pci-ver-dots"></i></a></li>
@@ -612,10 +614,10 @@
                                         <ul class="list-unstyled">
                                             <li class="col-xs-4" data-content="Assign Keywords">
                                             	<a class="shortcut-grid" href="./index.php"><i class="ti-info-alt"></i></a></li>
-                                            <li class="col-xs-4" data-content="Visualise Keywords (Coming Soon)">
-                                            	<a class="shortcut-grid" id="inlineModal" href="#inlineViz"><i class="ion-stats-bars"></i></a></li>
-                                            <li class="col-xs-4" data-content="Edit Keywords List (Coming Soon)">
-                                            	<a class="shortcut-grid" href="#"><i class="ti-tag"></i></a></li>
+                                            <!-- <li class="col-xs-4" data-content="Visualise Keywords (Coming Soon)">
+                                            	<a class="shortcut-grid" id="inlineModal" href="#inlineViz"><i class="ion-stats-bars"></i></a></li> //-->
+                                            <li class="col-xs-4" data-content="Edit Keywords List">
+                                            	<a class="shortcut-grid" id="inlineModalEditor" href="#inlineKeywordEditor"><i class="ti-tag"></i></a></li>
                                         </ul>
                                     </div>
 									<!-- 
@@ -661,7 +663,7 @@
 														echo "<li><a href=\"javascript: ";
 														echo "var dataE = 'letter=".ucwords($al)."&action=find'; ";
 														echo "var doDivA = $('#keywordsList').fadeOut('fast', function(){ ";
-														echo "var searchValA = $('#keywordsList').load('./data_keywords_desc.php',dataE, function(){ ";
+														echo "var searchValA = $('#keywordsList').load('./data_keywords_desc.php', dataE, function(){ ";
 														echo "var doDivAlsoA = $('#keywordsList').fadeIn('slow'); ";
 														echo "}); ";
 														echo "}); ";
@@ -702,7 +704,7 @@
                                         <p class="pad-all text-lg">HISTORY &nbsp; <?php
                                         	echo "<a href=\"javascript: ";
 											echo "var doAuditA = $('#auditHistoryPanel').fadeOut('fast', function(){ ";
-											echo "var doAuditB = $('#auditHistoryPanel').load('./data_history.php','$ref=".time()."', function(){ ";
+											echo "var doAuditB = $('#auditHistoryPanel').load('./data_history.php', '$ref=".time()."', function(){ ";
 											echo "var doAuditC = $('#auditHistoryPanel').fadeIn('slow'); ";
 											echo "}); ";
 											echo "}); ";
@@ -735,8 +737,8 @@
 														echo "var doThis = tagApi.tagsManager('pushTag','".ucwords($rowZ[1])."'); ";
 														echo "var dataA = 'kID=".$rowZ[0]."&action=yes'; ";
 														echo "var doAssA = $('#tagAssociationsList').fadeOut('fast', function(){ ";
-														echo "var doAssB = $('#tagAssociationsList').load('./data_keywords_assoc.php',dataA, function(){ ";
-														echo "var doAssB = $('#tagAssociationsList').fadeIn('slow'); ";
+														echo "var doAssB = $('#tagAssociationsList').load('./data_keywords_assoc.php', dataA, function(){ ";
+														echo "var doAssC = $('#tagAssociationsList').fadeIn('slow'); ";
 														echo "}); ";
 														echo "}); ";
 														echo "\" ";
@@ -786,6 +788,7 @@
 
 ?>        
         <div style="display:none"><div id="inlineViz">Nothing to see here ... yet!</div></div>
+        <div style="display:none"><div id="inlineKeywordEditor" class="pad-all"></div></div>
         <div style="display:none"><div id="theDarkCloset"></div></div>
 <?php
 
@@ -855,7 +858,32 @@
 					closeEffect	: 'fade',
 					openSpeed	: 300,
 					closeSpeed	: 100
-				});				
+				});		
+				
+				$("#inlineModalEditor").fancybox({
+					helpers : {
+						overlay : {
+							css : {
+								'background' : 'rgba(38, 50, 56, 0.90)'
+							}
+						}
+					},		
+					href		: '#inlineKeywordEditor',	
+					afterLoad   : function() {
+							this.content = $('#inlineKeywordEditor').load('./data_editor_keywords.php');
+    				},	
+					maxWidth	: 1200,
+					maxHeight	: 1000,
+					fitToView	: false,
+					width		: '90%',
+					height		: '90%',
+					autoSize	: false,
+					closeClick	: false,
+					openEffect	: 'fade',
+					closeEffect	: 'fade',
+					openSpeed	: 300,
+					closeSpeed	: 100
+				});			
 				
 				var preKeywordsB = new Bloodhound({
       				datumTokenizer: Bloodhound.tokenizers.obj.whitespace('name'),
