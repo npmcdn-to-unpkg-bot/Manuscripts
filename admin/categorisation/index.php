@@ -29,7 +29,8 @@
 //
 //  VERSION 0.1
 //  15-18 August 2016
-//	5-9 September 2016
+//	5-10 September 2016
+//	12 September 2016
 //
 //
 /////////////////////////////////////////////////////////// Collect session data
@@ -170,6 +171,7 @@
         <link rel="stylesheet" type="text/css" href="./js/bootstrap-tagmanager/tagmanager.css">
         <link rel="stylesheet" type="text/css" href="./js/fancybox/jquery.fancybox.css" media="screen" />
         <link rel="stylesheet" type="text/css" href="./js/x-editable/dist/bootstrap3-editable/css/bootstrap-editable.css">  
+        <link rel="stylesheet" type="text/css" href="./plugins/chosen/chosen.min.css">
 		<script language="javascript" type="text/javascript" src="./js/pace.min.js"></script>
         <script language="javascript" type="text/javascript" src="./js/jquery-2.2.4.min.js"></script>
 		<script language="javascript" type="text/javascript" src="./js/bootstrap.min.js"></script>
@@ -180,6 +182,7 @@
         <script language="javascript" type="text/javascript" src="./js/bootstrap-tagmanager/tagmanager.js"></script>
         <script language="javascript" type="text/javascript" src="./js/fancybox/jquery.fancybox.pack.js"></script> 
         <script language="javascript" type="text/javascript" src="./js/x-editable/dist/bootstrap3-editable/js/bootstrap-editable.js"></script> 
+        <script language="javascript" type="text/javascript" src="./plugins/chosen/chosen.jquery.min.js"></script>
 <?php
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// Manual CSS Interventions
@@ -260,6 +263,11 @@
 				min-width: 55px;	
 			}
 			
+			.chosen-container-single .chosen-single {
+				height: 35px;
+				line-height: 34px;
+			}
+			
 		</style>
     </head>   
 	<body>
@@ -284,7 +292,7 @@
                			</ul>
                     //-->
                         <ul class="nav navbar-top-links pull-left">
-                    		<li style="font-size: 1.2em; padding: 0.5em;" class="text-bold">&nbsp; &nbsp;CATEGORISATION TOOLKIT (Last Updated 9 September 2016)</li>
+                    		<li style="font-size: 1.2em; padding: 0.5em;" class="text-bold">&nbsp; &nbsp;CATEGORISATION TOOLKIT</li>
                			</ul>
                         <ul class="nav navbar-top-links pull-right">
 							<li><a href="#" class="aside-toggle navbar-aside-icon"><i class="pci-ver-dots"></i></a></li>
@@ -312,7 +320,7 @@
                         
                         	<!-- Titles Table Panel -->
                         	<div class="col-lg-6">
-                            	<div id="panel-titles" class="panel panel-bordered" style="min-height:770px;">
+                            	<div id="panel-titles" class="panel panel-bordered" style="min-height:850px;">
                                 	<div class="panel-heading">
                                     	<!-- 
                                         <div class="panel-control"><button id="panel-titles-refresh" class="btn"><i class="ti-reload icon-lg"></i></button></div> 
@@ -562,7 +570,7 @@
                             
                             <!-- Further Detail Panel -->
                           	<div class="col-lg-3">
-                            	<div id="panel-detail" class="panel panel-colorful panel-dark panel-bordered" style="min-height:770px;">
+                            	<div id="panel-detail" class="panel panel-colorful panel-dark panel-bordered" style="min-height:850px;">
                                 	<div class="panel-heading">
                                     	<!-- 
                                         <div class="panel-control"><button id="panel-detail-refresh" class="btn"><i class="ti-reload icon-lg"></i></button></div> 
@@ -580,7 +588,7 @@
                             
                             <!-- Tag Title Panel -->
                           	<div class="col-lg-3">
-                            	<div id="panel-detail" class="panel panel-colorful bg-gray-dark panel-bordered mar-rgt" style="min-height:770px;">
+                            	<div id="panel-detail" class="panel panel-colorful bg-gray-dark panel-bordered mar-rgt" style="min-height:850px;">
                                 	<div class="panel-heading">
                                     	<!-- 
                                         <div class="panel-control"><button id="panel-detail-refresh" class="btn"><i class="ti-reload icon-lg"></i></button></div> 

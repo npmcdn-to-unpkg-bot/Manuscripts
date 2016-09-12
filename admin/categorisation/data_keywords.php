@@ -29,7 +29,8 @@
 //
 //  VERSION 0.1
 //  15-18 August 2016
-//	5-8 September 2016
+//	5-10 September 2016
+//	12 September 2016
 //
 //
 /////////////////////////////////////////////////////////// Collect session data
@@ -53,6 +54,7 @@
 	$ID = $_GET['ID'];
 	$action = $_GET['action'];
 	$rKeywords = $_GET['rKeywords'];
+	$rParisian = $_GET['rParisian'];
 	$_GET = array();
 	$_POST = array();
 
@@ -107,7 +109,7 @@
 				$old_keywords = rtrim($old_keywords, ",");
 			}		
 			$new_keywordIDs = $frIDs;
-			$queryD = "UPDATE manuscript_books SET keywords = \"$frIDs\" WHERE super_book_code LIKE \"$ID\"";
+			$queryD = "UPDATE manuscript_books SET keywords = \"$frIDs\", parisian_keyword = \"$rParisian\" WHERE super_book_code LIKE \"$ID\"";
 			$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
 			if(($mysqli_resultD > 0)) {
 				$save = "y";
@@ -128,6 +130,7 @@
 	if(!empty($ID)) {
 		$found = "";
 		$keywordIDs = array();
+		$keywordsP = "";
 		$queryD = "SELECT * FROM manuscript_books WHERE super_book_code LIKE \"$ID\"";
 		$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
 		while($rowD = mysqli_fetch_row($mysqli_resultD)) {
@@ -150,6 +153,13 @@
 				$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
 				while($rowD = mysqli_fetch_row($mysqli_resultD)) {
 					$prefill[] = ucwords($rowD[1]);
+				}
+			}
+			if(($keywordsP != "")) {
+				$queryD = "SELECT * FROM parisian_keywords WHERE parisian_keyword_code LIKE \"$keywordsP\"";
+				$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
+				while($rowD = mysqli_fetch_row($mysqli_resultD)) {
+					$paris_keyword = ucwords($rowD[1]);
 				}
 			}
 		}
@@ -192,12 +202,52 @@
     		echo "placeholder=\"Start typing a tag or click to clear ...\" ";
     		echo "class=\"title-tagger input-sm text-dark tm-input\" ";
     		echo "style=\"display: block; width: 100%; min-width: 100%;\" ";
-    		echo "onclick=\"var cleanBar = $('#titleTagger').typeahead('val','');\" />";
+    		echo "onclick=\"var cleanBar = $('#titleTagger').typeahead('val','');\" />\n";
+			
+/////////////////////////////////////////////////////////// Select for Parisian tags
+
+			$sel = "";
+			echo "<select data-placeholder=\"Choose a Parisian Keyword ...\" id=\"rParisian\" name=\"rParisian\">";
+			if(($paris_keyword == "") && ($keywordsP == "")) {
+				echo "<option value=\"\" selected disabled>Choose a Parisian Keyword ...</option>";
+			} else {
+				echo "<option value=\"$keywordsP\" selected>$paris_keyword</option>";
+				echo "<option value=\"\" disabled>&nbsp;</option>";
+			}
+			$queryD = "SELECT * FROM parisian_keywords WHERE ancestor1 IS NULL ORDER BY parisian_keyword ASC";
+			$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
+			while($rowD = mysqli_fetch_row($mysqli_resultD)) {
+				echo "<option value=\"$rowD[0]\" style=\"background-color: #555555; color: #ffffff; border-bottom: 1px solid #ffffff;\">$rowD[1]</option>";
+				$queryP = "SELECT * FROM parisian_keywords ";
+				$queryP .= "WHERE ancestor1 = \"$rowD[0]\" ";
+				$queryP .= "OR ancestor2 = \"$rowD[0]\" ";
+				$queryP .= "OR ancestor3 = \"$rowD[0]\" ";
+				$queryP .= "ORDER BY parisian_keyword ASC";
+				$mysqli_resultP = mysqli_query($mysqli_link, $queryP);
+				while($rowP = mysqli_fetch_row($mysqli_resultP)) {
+					echo "<option value=\"$rowP[0]\" style=\"background-color: #cfcfcf; border-bottom: 1px solid #ffffff;\">$rowP[1]</option>";
+					$queryP2 = "SELECT * FROM parisian_keywords ";
+					$queryP2 .= "WHERE ancestor1 = \"$rowP[0]\" ";
+					$queryP2 .= "OR ancestor2 = \"$rowP[0]\" ";
+					$queryP2 .= "OR ancestor3 = \"$rowP[0]\" ";
+					$queryP2 .= "ORDER BY parisian_keyword ASC";
+					$mysqli_resultP2 = mysqli_query($mysqli_link, $queryP2);
+					while($rowP2 = mysqli_fetch_row($mysqli_resultP2)) {
+						echo "<option value=\"$rowP2[0]\" style=\"background-color: #efefef; border-bottom: 1px solid #ffffff;\">$rowP2[1]</option>";
+					}
+				}
+			}
+			echo "</select>\n";			
+
+/////////////////////////////////////////////////////////// Submit button	
+			
 			echo "<a href=\"javascript: ";	
 			echo "var rKey = $('#titleTaggerList').val(); ";
+			echo "var rParis = $('#rParisian').val(); ";
 			echo "var dataE = '";	
 			echo "ID=$ID";
 			echo "&action=save";	
+			echo "&rParisian='+rParis+'";
 			echo "&rKeywords='+rKey";
 			echo "; ";
 			echo "var doDivA = $('#titleTags').fadeOut('fast', function(){ ";
@@ -205,14 +255,14 @@
 			echo "var doDivAlsoA = $('#titleTags').fadeIn('slow'); ";
 			echo "}); ";
 			echo "}); ";
-			echo "\">";
+			echo "\">";		
 			echo "<button class=\"btn btn-block btn-purple mar-top\">Save Keyword Assignment(s)</button>";
 			echo "</a>";
     		echo "</div>";
 			
 /////////////////////////////////////////////////////////// Div for last update if exists
 
-			if(($ID != "") && ($showUpdateTime == "y")) {
+			if(($ID != "") && ($showUpdateTime == "")) {
 				$lastTime = "";
 				$queryD = "SELECT * FROM manuscript_cat_audit WHERE super_book_code LIKE \"$ID\" ORDER BY ID DESC LIMIT 1";
 				$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
@@ -348,6 +398,13 @@
 					template: '<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner" style="border: 3px solid #ffffff; color: #000000; background-color:#6ab5f1; padding:20px;"></div></div>',
 					html: true,
 					trigger : 'hover'
+				});
+				
+				$("#rParisian").chosen({
+					width: "100%",
+					allow_single_deselect: "true",
+					max_selected_options: "1",
+					placeholder_text_single: "Choose a Parisian Keyword ..."
 				});
 
 				var tagApi = $(".title-tagger").tagsManager({
