@@ -30,7 +30,7 @@
 //  VERSION 0.1
 //  15-18 August 2016
 //	5-10 September 2016
-//	12 September 2016
+//	12-13 September 2016
 //
 //
 /////////////////////////////////////////////////////////// Collect session data
@@ -55,8 +55,32 @@
 	$action = $_GET['action'];
 	$rKeywords = $_GET['rKeywords'];
 	$rParisian = $_GET['rParisian'];
+	$fuzzyValue = $_GET['fuzzyValue'];
+	$fuzzyComment = $_GET['fuzzyComment'];
 	$_GET = array();
 	$_POST = array();
+	
+/////////////////////////////////////////////////////////// If save then record fuzzy value and comment
+
+	if(($ID != "") && ($action == "save")) {
+		if(($fuzzyValue != "")) {
+			$queryD = "DELETE FROM manuscript_cat_fuzzy WHERE super_book_code LIKE \"$ID\"; ";
+			$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
+			$queryD = "INSERT INTO manuscript_cat_fuzzy VALUES (\"0\", \"$ID\", \"$fuzzyValue\", \"$fuzzyComment\"); ";
+			$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
+		}
+	}
+	
+/////////////////////////////////////////////////////////// Get existing fuzzy value and comment
+
+	if(($ID != "")) {
+		$queryD = "SELECT * FROM manuscript_cat_fuzzy WHERE super_book_code LIKE \"$ID\"; ";
+		$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
+		while($rowD = mysqli_fetch_row($mysqli_resultD)) {
+			$fuzzyValue = $rowD[2];
+			$fuzzyComment = $rowD[3];
+		}
+	}
 
 /////////////////////////////////////////////////////////// If save then get keyword IDs and run save + audit routines
 
@@ -194,6 +218,7 @@
 /////////////////////////////////////////////////////////// Div for input functions			
 			
     		echo "<div id=\"tagsManagerInput\">";
+			echo "<div class=\"mar-btm\">";
 			echo "<input type=\"hidden\" name=\"titleTaggerList\" id=\"titleTaggerList\" >";
     		echo "<input type=\"text\" ";
     		echo "name=\"titleTagger\" ";
@@ -202,11 +227,12 @@
     		echo "placeholder=\"Start typing a tag or click to clear ...\" ";
     		echo "class=\"title-tagger input-sm text-dark tm-input\" ";
     		echo "style=\"display: block; width: 100%; min-width: 100%;\" ";
-    		echo "onclick=\"var cleanBar = $('#titleTagger').typeahead('val','');\" />\n";
+    		echo "onclick=\"var cleanBar = $('#titleTagger').typeahead('val','');\" /></div>\n";
 			
 /////////////////////////////////////////////////////////// Select for Parisian tags
 
 			$sel = "";
+			echo "<div class=\"mar-btm\">";
 			echo "<select data-placeholder=\"Choose a Parisian Keyword ...\" id=\"rParisian\" name=\"rParisian\">";
 			if(($paris_keyword == "") && ($keywordsP == "")) {
 				echo "<option value=\"\" selected disabled>Choose a Parisian Keyword ...</option>";
@@ -237,17 +263,61 @@
 					}
 				}
 			}
-			echo "</select>\n";			
+			echo "</select></div>\n";	
+			
+/////////////////////////////////////////////////////////// Select for fuzzy value
+
+			$sel = "";
+			echo "<div class=\"mar-btm\">";
+			echo "<select data-placeholder=\"Choose a fuzzy value ...\" id=\"fuzzyValue\" name=\"fuzzyValue\">";
+			if(($fuzzyValue == "")) {
+				echo "<option value=\"\" selected disabled>Choose a fuzzy value ...</option>";
+			} else {
+				echo "<option value=\"$fuzzyValue\" selected>$fuzzyValue</option>";
+				echo "<option value=\"\" disabled>&nbsp;</option>";
+			}
+			echo "<option value=\"5\" style=\"background-color: #cfcfcf; border-bottom: 1px solid #ffffff;\">";
+			echo "5. Classified after thorough reading knowledge of work.";
+			echo "</option>";
+			echo "<option value=\"4\" style=\"background-color: #cfcfcf; border-bottom: 1px solid #ffffff;\">";
+			echo "4. Classified after inspection of a copy of the work.";
+			echo "</option>";
+			echo "<option value=\"3\" style=\"background-color: #cfcfcf; border-bottom: 1px solid #ffffff;\">";
+			echo "3. Classified after accounts in bibliographic sources, antiquarian bookseller's catalogue descriptions, or other secondary source accounts.";
+			echo "</option>";
+			echo "<option value=\"2\" style=\"background-color: #cfcfcf; border-bottom: 1px solid #ffffff;\">";
+			echo "2. Classified on basis of subject categorisations in library or other catalogues.";
+			echo "</option>";
+			echo "<option value=\"1\" style=\"background-color: #cfcfcf; border-bottom: 1px solid #ffffff;\">";
+			echo "1. Classified on basis of title alone.";
+			echo "</option>";
+			echo "<option value=\"0\" style=\"background-color: #cfcfcf; border-bottom: 1px solid #ffffff;\">";
+			echo "0. No information exists on how this work was classified.";
+			echo "</option>";
+			echo "</select></div>\n";
+			
+/////////////////////////////////////////////////////////// Textarea for fuzzy comment
+
+			echo "<div>";
+			echo "<textarea placeholder=\"Please justify your fuzzy value above ...\" id=\"fuzzyComment\" name=\"fuzzyComment\" rows=\"1\" ";
+			echo "style=\"width:100%; padding: 5px; outline: none;\">";
+			echo $fuzzyComment;
+			echo "</textarea>";
+			echo "</div>\n";		
 
 /////////////////////////////////////////////////////////// Submit button	
 			
 			echo "<a href=\"javascript: ";	
 			echo "var rKey = $('#titleTaggerList').val(); ";
 			echo "var rParis = $('#rParisian').val(); ";
+			echo "var fuzzyValue = $('#fuzzyValue').val(); ";
+			echo "var fuzzyComment = $('#fuzzyComment').val(); ";
 			echo "var dataE = '";	
 			echo "ID=$ID";
 			echo "&action=save";	
 			echo "&rParisian='+rParis+'";
+			echo "&fuzzyValue='+fuzzyValue+'";
+			echo "&fuzzyComment='+fuzzyComment+'";
 			echo "&rKeywords='+rKey";
 			echo "; ";
 			echo "var doDivA = $('#titleTags').fadeOut('fast', function(){ ";
@@ -262,7 +332,7 @@
 			
 /////////////////////////////////////////////////////////// Div for last update if exists
 
-			if(($ID != "") && ($showUpdateTime == "")) {
+			if(($ID != "") && ($showUpdateTime != "")) {
 				$lastTime = "";
 				$queryD = "SELECT * FROM manuscript_cat_audit WHERE super_book_code LIKE \"$ID\" ORDER BY ID DESC LIMIT 1";
 				$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
@@ -289,7 +359,7 @@
 			echo "<div class=\"panel panel-bordered-primary bg-gray\">";
     		echo "<div class=\"panel-body\">";
 			echo "<div id=\"tagAssociationsList\">";
-			echo "No term selected from tag list. To show associated keywords, please slide out the right-hand panel and select a tag.";
+			echo "To show associated keywords, please slide out the right-hand panel and select a tag.";
 			echo "</div>";
 			echo "</div>";
 			echo "</div>";
@@ -311,7 +381,7 @@
 			$priorTags = "";
 			$priorTagsA = array();
 			$priorTagsB = array();
-			$queryD = "SELECT DISTINCT(new_keywords) FROM manuscript_cat_audit WHERE new_keywords != \"\" ORDER BY ID DESC LIMIT 2";
+			$queryD = "SELECT DISTINCT(new_keywords) FROM manuscript_cat_audit WHERE new_keywords != \"\" ORDER BY ID DESC LIMIT 1";
 			$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
 			while($rowD = mysqli_fetch_row($mysqli_resultD)) {
 				if(($o == 1)) {
@@ -405,6 +475,13 @@
 					allow_single_deselect: "true",
 					max_selected_options: "1",
 					placeholder_text_single: "Choose a Parisian Keyword ..."
+				});
+				
+				$("#fuzzyValue").chosen({
+					width: "100%",
+					allow_single_deselect: "true",
+					max_selected_options: "1",
+					placeholder_text_single: "Choose a fuzzy value ..."
 				});
 
 				var tagApi = $(".title-tagger").tagsManager({
