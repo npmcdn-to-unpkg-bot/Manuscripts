@@ -267,13 +267,14 @@
 			
 /////////////////////////////////////////////////////////// Select for fuzzy value
 
+			$fuzzyArray = array("No information exists on how this work was classified.", "Classified on basis of title alone.", "Classified on basis of subject categorisations in library or other catalogues.", "Classified after accounts in bibliographic sources, antiquarian bookseller's catalogue descriptions, or other secondary source accounts.", "Classified after inspection of a copy of the work.", "Classified after thorough reading knowledge of work.");
 			$sel = "";
 			echo "<div class=\"mar-btm\">";
 			echo "<select data-placeholder=\"Choose a fuzzy value ...\" id=\"fuzzyValue\" name=\"fuzzyValue\">";
 			if(($fuzzyValue == "")) {
 				echo "<option value=\"\" selected disabled>Choose a fuzzy value ...</option>";
 			} else {
-				echo "<option value=\"$fuzzyValue\" selected>$fuzzyValue</option>";
+				echo "<option value=\"$fuzzyValue\" selected>".$fuzzyValue.". ".$fuzzyArray[$fuzzyValue]."</option>";
 				echo "<option value=\"\" disabled>&nbsp;</option>";
 			}
 			echo "<option value=\"5\" style=\"background-color: #cfcfcf; border-bottom: 1px solid #ffffff;\">";
