@@ -87,68 +87,89 @@
 /////////////////////////////////////////////////////////// If save then get keyword IDs and run save + audit routines
 
 	if(($ID != "") && ($action == "save")) {
+
+/////////////////////////////// Set vars
+		
 		$old_keywordIDs = "";
 		$old_keywords = "";
 		$new_keywordIDs = "";
 		$new_keywords = $rKeywords;
 		$rIDs = array();
 		$frIDs = "";
-//		if(($rKeywords != "")) {
-			if(preg_match("/\|/i","$rKeywords")) {
-				$rKeys = explode("|","$rKeywords");
-				foreach($rKeys as $ky) {
-					$queryD = "SELECT * FROM keywords WHERE keyword LIKE \"$ky\"";
-					$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
-					while($rowD = mysqli_fetch_row($mysqli_resultD)) {
-						$rIDs[] = $rowD[0];
-						$frIDs .= $rowD[0].",";
-					}
-				}
-				$frIDs = rtrim($frIDs, ",");
-			} else {
-				$queryD = "SELECT * FROM keywords WHERE keyword LIKE \"$rKeywords\"";
+
+/////////////////////////////// Subroutine for standard keywords record and audit
+
+		if(preg_match("/\|/i","$rKeywords")) {
+			$rKeys = explode("|","$rKeywords");
+			foreach($rKeys as $ky) {
+				$queryD = "SELECT * FROM keywords WHERE keyword LIKE \"$ky\"";
 				$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
 				while($rowD = mysqli_fetch_row($mysqli_resultD)) {
 					$rIDs[] = $rowD[0];
-					$frIDs .= $rowD[0];
+					$frIDs .= $rowD[0].",";
 				}
 			}
-			$queryD = "SELECT * FROM manuscript_books WHERE super_book_code LIKE \"$ID\"";
+			$frIDs = rtrim($frIDs, ",");
+		} else {
+			$queryD = "SELECT * FROM keywords WHERE keyword LIKE \"$rKeywords\"";
 			$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
 			while($rowD = mysqli_fetch_row($mysqli_resultD)) {
-				$old_keywordIDs = $rowD[2];
+				$rIDs[] = $rowD[0];
+				$frIDs .= $rowD[0];
 			}
-			if((preg_match("/,/i","$old_keywordIDs"))) {
-				$prep_old_keywordIDs = explode(",",$old_keywordIDs);
-			} else {
-				$prep_old_keywordIDs = array();
-				$prep_old_keywordIDs[] = $old_keywordIDs;	
-			}
-			if(($prep_old_keywordIDs[0] != "")) {
-				foreach($prep_old_keywordIDs as $p) {
-					$queryD = "SELECT * FROM keywords WHERE keyword_code LIKE \"$p\"";
-					$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
-					while($rowD = mysqli_fetch_row($mysqli_resultD)) {
-						$old_keywords .= ucwords($rowD[1]).",";
-					}
+		}
+		$queryD = "SELECT * FROM manuscript_books WHERE super_book_code LIKE \"$ID\"";
+		$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
+		while($rowD = mysqli_fetch_row($mysqli_resultD)) {
+			$old_keywordIDs = $rowD[2];
+		}
+		if((preg_match("/,/i","$old_keywordIDs"))) {
+			$prep_old_keywordIDs = explode(",",$old_keywordIDs);
+		} else {
+			$prep_old_keywordIDs = array();
+			$prep_old_keywordIDs[] = $old_keywordIDs;	
+		}
+		if(($prep_old_keywordIDs[0] != "")) {
+			foreach($prep_old_keywordIDs as $p) {
+				$queryD = "SELECT * FROM keywords WHERE keyword_code LIKE \"$p\"";
+				$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
+				while($rowD = mysqli_fetch_row($mysqli_resultD)) {
+					$old_keywords .= ucwords($rowD[1]).",";
 				}
-				$old_keywords = rtrim($old_keywords, ",");
-			}		
-			$new_keywordIDs = $frIDs;
-			$queryD = "UPDATE manuscript_books SET keywords = \"$frIDs\", parisian_keyword = \"$rParisian\" WHERE super_book_code LIKE \"$ID\"";
+			}
+			$old_keywords = rtrim($old_keywords, ",");
+		}		
+		$new_keywordIDs = $frIDs;
+		$queryD = "UPDATE manuscript_books SET keywords = \"$frIDs\", parisian_keyword = \"$rParisian\" WHERE super_book_code LIKE \"$ID\"";
+		$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
+		if(($mysqli_resultD > 0)) {
+			$save = "y";
+			$theTime = date("Y-m-d H:i:s",time());
+			$queryD = "INSERT INTO manuscript_cat_audit VALUES ";
+			$queryD .= "(0, \"$ID\", \"$theTime\", \"$new_keywords\", \"$new_keywordIDs\", \"$old_keywords\", \"$old_keywordIDs\", \"admin\")";
+			$mysqli_resultD = mysqli_query($mysqli_link, $queryD);	
+		} else {
+			$save = "n";
+		}
+	
+/////////////////////////////// Subroutine for Parisian keyword audit	
+			
+		if(($rParisian != "")) {
+			$queryD = "DELETE FROM manuscript_cat_audit WHERE super_book_code = \"LAST_PARISIAN_KEYWORD\"";
 			$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
-			if(($mysqli_resultD > 0)) {
-				$save = "y";
+			
+			$queryD = "SELECT * FROM parisian_keywords WHERE parisian_keyword_code LIKE \"$rParisian\"";
+			$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
+			while($rowD = mysqli_fetch_row($mysqli_resultD)) {
+				$rParisianName = $rowD[1];
+			}
+			if(($rParisian != "") && ($rParisianName != "")) {
 				$theTime = date("Y-m-d H:i:s",time());
 				$queryD = "INSERT INTO manuscript_cat_audit VALUES ";
-				$queryD .= "(0, \"$ID\", \"$theTime\", \"$new_keywords\", \"$new_keywordIDs\", \"$old_keywords\", \"$old_keywordIDs\", \"admin\")";
-				$mysqli_resultD = mysqli_query($mysqli_link, $queryD);	
-			} else {
-				$save = "n";
+				$queryD .= "(0, \"LAST_PARISIAN_KEYWORD\", \"$theTime\", \"$rParisianName\", \"$rParisian\", \"\", \"\", \"admin\")";
+				$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
 			}
-//		} else {
-//			$save = "n";
-//		}
+		}
 	}
 
 /////////////////////////////////////////////////////////// Data routine for existing keywords
@@ -376,15 +397,28 @@
 			echo "<div id=\"tagsManagerRecent\" class=\"pad-top mar-top\">";
 			echo "<h4>RECENTLY USED TAGS</h4>";
 			echo "<hr />";
-			echo "</div>";
+			echo "</div>";	
+			
+//////////////////////////// Gather prior parisian tag
 
-//////////////////////////// Gather prior tags
+			$frenchCode = "";
+			$frehcnName = "";
+			$queryD = "SELECT * FROM manuscript_cat_audit WHERE super_book_code LIKE \"%PARISIAN%\" ";
+			$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
+			while($rowD = mysqli_fetch_row($mysqli_resultD)) {
+				$frenchCode = $rowD[4];
+				$frenchName = $rowD[3];
+			}
+
+//////////////////////////// Gather prior standard tags
 			
 			$o = 1;
 			$priorTags = "";
 			$priorTagsA = array();
 			$priorTagsB = array();
-			$queryD = "SELECT DISTINCT(new_keywords) FROM manuscript_cat_audit WHERE new_keywords != \"\" ORDER BY ID DESC LIMIT 1";
+			$queryD = "SELECT DISTINCT(new_keywords) FROM manuscript_cat_audit ";
+			$queryD .= "WHERE new_keywords != \"\" AND super_book_code NOT LIKE \"%PARISIAN%\" ";
+			$queryD .= "ORDER BY ID DESC LIMIT 1";
 			$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
 			while($rowD = mysqli_fetch_row($mysqli_resultD)) {
 				if(($o == 1)) {
@@ -406,11 +440,30 @@
 			$priorTags = array_merge($priorTagsA,$priorTagsB);
 			$priorTags = array_unique($priorTags);
 
-//////////////////////////// Sort and show prior tags
+//////////////////////////// Show prior French tag
 						
     		echo "<div class=\"panel panel-bordered-mint bg-gray\">";
     		echo "<div class=\"panel-body\">";
 			echo "<div id=\"tagsManagerSaved\">";
+			if(($frenchCode != "") && ($frenchName != "")) {
+				echo "<li>";
+				echo "<a href=\"javascript: ";
+				echo "var selectF = $('#rParisian').val('".$frenchCode."').change(); ";
+				echo "var selectU = $('#rParisian').trigger('chosen:updated'); ";
+				echo "\" ";
+				echo "style=\"color:#000055;\" ";
+				echo "class=\"add-tooltip\" ";
+				echo "data-toggle=\"tooltip\" ";
+				echo "data-container=\"body\" ";
+				echo "data-placement=\"left\" ";
+				echo "data-original-title=\"";
+				echo "PARISIAN KEYWORD";
+				echo "\" ";
+				echo ">$frenchName</a> (Parisian Keyword)</li>";
+			}
+			
+//////////////////////////// Sort and show prior Standard tags			
+			
 			sort($priorTags);
 			foreach($priorTags as $p) {
 				$descp = "";
