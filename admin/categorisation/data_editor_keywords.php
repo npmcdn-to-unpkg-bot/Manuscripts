@@ -29,6 +29,7 @@
 //
 //  VERSION 0.1
 //	9 September 2016
+//	14 September 2016
 //
 //
 /////////////////////////////////////////////////////////// Collect session data
@@ -67,13 +68,13 @@
 		$queryD = "INSERT INTO keywords VALUES (\"$kUUID\", \"$kName\", \"$kDescription\", \"\")";
 		$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
 		$searchLetter = $kName[0];
-		$msg = "<span class=\"text-success text-bold\">New keyword and description added.</span>";
+		$msg = "<span class=\"text-success text-bold\">New keyword and description added. Please <a href=\"./index.php\">RELOAD</a> toolkit.</span>";
 	}
 	if(($action == "DELETE") && ($kID !="")) {
 		$queryD = "DELETE FROM keywords WHERE keyword_code = \"$kID\"";
 		$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
 		$searchLetter = $kName[0];
-		$msg = "<span class=\"text-success text-bold\">Keyword and description have been deleted.</span>";
+		$msg = "<span class=\"text-success text-bold\">Keyword and description have been deleted. Please <a href=\"./index.php\">RELOAD</a> toolkit.</span>";
 	}
 	if(($action == "ADD") && (($kName == "") or ($kDescription == ""))) {
 		$msg = "<span class=\"text-danger text-bold\">No action taken: incomplete details were submitted!</span>";

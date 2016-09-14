@@ -30,7 +30,7 @@
 //  VERSION 0.1
 //  15-18 August 2016
 //	5-10 September 2016
-//	12-13 September 2016
+//	12-14 September 2016
 //
 //
 /////////////////////////////////////////////////////////// Collect session data
@@ -57,6 +57,7 @@
 	$rParisian = $_GET['rParisian'];
 	$fuzzyValue = $_GET['fuzzyValue'];
 	$fuzzyComment = $_GET['fuzzyComment'];
+	$doneFuzzy = "";
 	$_GET = array();
 	$_POST = array();
 	
@@ -68,6 +69,7 @@
 			$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
 			$queryD = "INSERT INTO manuscript_cat_fuzzy VALUES (\"0\", \"$ID\", \"$fuzzyValue\", \"$fuzzyComment\"); ";
 			$mysqli_resultD = mysqli_query($mysqli_link, $queryD);
+			$doneFuzzy = "y";
 		}
 	}
 	
@@ -552,6 +554,9 @@
 				
 				if(($action == "save")) {
 					echo "var doAlert = $('#alertKeywords').delay(5000).fadeOut();\n\n";	
+				}
+				if(($doneFuzzy == "y")) {
+					echo "var doClassB = $('#btn_P".$ID."').removeClass('btn-pink').addClass('btn-default');\n\n";
 				}
 ?>								
 		

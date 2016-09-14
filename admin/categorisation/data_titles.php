@@ -29,6 +29,7 @@
 //
 //  VERSION 0.1
 //  15-18 August 2016
+//	14 September 2016
 //
 //
 /////////////////////////////////////////////////////////// Collect session data
@@ -162,6 +163,34 @@
 			echo "<button class=\"btn btn-block btn-danger\">Add Keywords</button>";
 		}
 		echo "</a></p>";
+		
+/////////////////////////////////////////////////////////// Search queries
+		
+		if(($work != "")) {
+			echo "<p>";
+			echo "<a href=\"https://www.worldcat.org/search?qt=worldcat_org_bks&q=".$work."&fq=dt%3Abks\" target=\"_querySearch\">";
+			echo "<button class=\"btn btn-block btn-primary\">SEARCH WORLDCAT</button>";
+			echo "</a></p>";
+			echo "<p>";
+			echo "<a href=\"https://www.google.com/search?tbm=bks&q=".$work."\" target=\"_querySearch\">";
+			echo "<button class=\"btn btn-block btn-info\">SEARCH GOOGLE BOOKS</button>";
+			echo "</a></p>";
+			echo "<p>";
+			echo "<a target=\"_querySearch\" href=\"http://kvk.bibliothek.kit.edu/hylib-bin/kvk/nph-kvk2.cgi?";
+			echo "maske=kvk-redesign&lang=en&title=KIT-Bibliothek%3A+Karlsruher+";
+			echo "Virtueller+Katalog+KVK+%3A+Ergebnisanzeige&head=%2F%2Fkvk.bibliothek.kit.edu%2Fasset%2Fhtml%2Fhead.html";
+			echo "&header=%2F%2Fkvk.bibliothek.kit.edu%2Fasset%2Fhtml%2Fheader.html&spacer=%2F%2Fkvk.bibliothek.kit.edu%2Fasset%2Fhtml%2Fspacer.html&";
+			echo "footer=%2F%2Fkvk.bibliothek.kit.edu%2Fasset%2Fhtml%2Ffooter.html&css=none&input-charset=utf-8&ALL=".$work."&TI=&AU=&CI=&ST=";
+			echo "&PY=&SB=&SS=&PU=&kataloge=SWB&kataloge=BVB&kataloge=NRW&kataloge=HEBIS&kataloge=HEBIS_RETRO&kataloge=KOBV_SOLR";
+			echo "&kataloge=GBV&kataloge=DDB&kataloge=STABI_BERLIN&SCHWEIZ=&kataloge=SWISSBIB&kataloge=HELVETICAT";
+			echo "&kataloge=BASEL&kataloge=ETH&kataloge=VKCH_RERO&kataloge=VERBUND_BELGIEN&kataloge=BNF_PARIS";
+			echo "&kataloge=COPAC&kataloge=NB_NIEDERLANDE&ref=direct&client-js=yes&inhibit_redirect=1\">";
+			echo "<button class=\"btn btn-block btn-mint\">SEARCH KARLSRUHER KATALOG</button>";
+			echo "</a></p>";
+		}
+		
+/////////////////////////////////////////////////////////// End		
+			
 	} else {
         echo "<p>No data was provided. ";
 		echo "Please reload the webpage and see if that resolves the problem. ";

@@ -29,6 +29,7 @@
 //
 //  VERSION 0.1
 //	5-7 September 2016
+//	14 September 2016
 //
 //
 /////////////////////////////////////////////////////////// Collect session data
@@ -68,10 +69,11 @@
 		echo "var doAssB = $('#tagAssociationsList').fadeIn('slow'); ";
 		echo "}); ";
 		echo "}); ";
+	//	echo "var fixTip = $(this).on('click', function () { $(this).tooltip('remove'); }); ";
 		echo "\" ";
 		echo "style=\"color:#FFFFFF;\" ";
 		echo "class=\"add-tooltip\" ";
-		echo "data-toggle=\"tooltipB\" ";
+		echo "data-toggle=\"tooltipBG\" ";
 		echo "data-container=\"body\" ";
 		echo "data-placement=\"left\" ";
 		echo "data-original-title=\"";
@@ -86,7 +88,7 @@
 ?>
 	<script language="javascript" type="text/javascript" >
 	
-		$('[data-toggle="tooltipB"]').tooltip({
+		$('[data-toggle="tooltipBG"]').tooltip({
 			template: '<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-inner" style="border: 3px solid #000000; color: #000000; background-color:#FFFFFF; padding:20px;"></div></div>',
 			html: true,
 			trigger : 'hover'
